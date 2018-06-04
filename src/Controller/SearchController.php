@@ -3,20 +3,20 @@
 namespace App\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Service\Allegro\AllegroServiceInterface;
 
-class SearchController extends Controller
+class SearchController extends AbstractController
 {
     /**
-     * @Route("/search", name="search")
+     * @Route("/search/new", name="search_new")
      */
-    public function index(AllegroServiceInterface $allegro)
+    public function newSearch(AllegroServiceInterface $allegro)
     {
-    	print_r($allegro->getItems([]));
+    	//print_r($allegro->getItems([]));
 
 
-        return $this->render('search/index.html.twig', [
+        return $this->render('search/search_new.html.twig', [
             'controller_name' => 'SearchController',
         ]);
     }
