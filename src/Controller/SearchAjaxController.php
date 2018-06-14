@@ -15,16 +15,8 @@ class SearchAjaxController extends AbstractController
      */
     public function getAvailableFilters(Request $request, AllegroServiceInterface $allegro): JsonResponse
     {
-    	$filters = $request->query->get('filters');
-    	
-    	$filters = array_merge(
-    		$filters['basic'] ?? [],
-    		$filters['country'] ?? [],
-    		$filters['category'] ?? []
-    	);
+    	$currentFilters = $request->query->get('currentFilters');
 
-    	$availableFilters = $allegro->getAvailableFilters($filters);
-
-        return new JsonResponse($availableFilters);
+        return new JsonResponse($allegro->getFiltersInfo($currentFilters));
     }
 }

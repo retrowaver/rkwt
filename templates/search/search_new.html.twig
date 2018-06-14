@@ -8,34 +8,41 @@
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
+
 <div class="example-wrapper">
     <h1>Nowe wyszukiwanie</h1>
     <p>test</p>
-    <h2>Filtry podstawowe
-	    <select>
-	      <option>abcd</option>
-	      <option>eeeeeeeee</option>
-	    </select>
-	    <button type="button" class="btn btn-outline-success">
+    <h2>Nowy filtr:
+	    <select id="filters-container"></select>
+	    <button type="button" class="btn btn-outline-success new-filter">
 	    	Dodaj
 	    </button>
     </h2>
 
+    <div id="filters">
+
+    </div>
 
 
-    <h2>Filtry szczegółowe
-	    <button type="button" class="btn btn-outline-success">
-	    	Dodaj
-	    </button>
-    </h2>
-    <h2>Filtry kategorii
-	    <button type="button" class="btn btn-outline-success">
-	    	Dodaj
-	    </button>
-    </h2>
+
+
+
+
+
+
+{% include 'search/modal/modal.html.twig' %}
+
+
+
 </div>
 {% endblock %}
 
 {% block javascripts %}
-<script src="/js/search.js"></script>
+	{% include 'search/handlebars_includes.html.twig' %}
+	<script src="/js/handlebars-v4.0.11.js"></script>
+	<script src="/js/search/display-service.js"></script>
+	<script src="/js/search/filter-service.js"></script>
+	<script src="/js/search/filter-collection.js"></script>
+	<script src="/js/search/templates.js"></script>
+	<script src="/js/searchv2.js"></script>
 {% endblock %}

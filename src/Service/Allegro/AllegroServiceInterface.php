@@ -6,5 +6,5 @@ interface AllegroServiceInterface
 {
 	public function getItems(array $filters): array;
 
-	public function getAvailableFilters(?array $filters): array;
+	public function getFiltersInfo(?array $filters): array;
 }

@@ -9,8 +9,9 @@ class AllegroService implements AllegroServiceInterface
 	const API_URL = 'https://webapi.allegro.pl/service.php?wsdl';
 	const COUNTRY_CODE = 1; // 1 for Poland
 	const GET_ITEMS_BATCH_SIZE = 50; // 1-1000
-	const ALLOWED_BASIC_FILTERS = ['search', 'category', 'userId'];
-	const ALLOWED_COUNTRY_FILTERS = ['price', 'condition', 'offerType', 'shippingTime', 'offerOptions'];
+
+	const BASIC_FILTERS = ['search', 'category', 'userId'];
+	const COUNTRY_FILTERS = ['price', 'condition', 'offerType', 'shippingTime', 'offerOptions'];
 
 	private $apiKey;
 	private $soap;
@@ -38,7 +39,7 @@ class AllegroService implements AllegroServiceInterface
 			$request['resultOffset'] = $offset++ * self::GET_ITEMS_BATCH_SIZE;
 			$result = $this->soap->doGetItemsList($request);
 
-			print_r($result);
+			//print_r($result);
 
 
 			$itemsList = array_merge($itemsList, $result->itemsList->item ?? []);
@@ -47,42 +48,61 @@ class AllegroService implements AllegroServiceInterface
 		return $this->convertItemsListToItems($itemsList);
 	}
 
-	public function getAvailableFilters(?array $filters = null): array
+	public function getFiltersInfo(?array $currentFilters = null): array
 	{
-		$availableFilters = [
-			'basic' => [],
-			'country' => [],
-			'category' => [],
-		];
-
 		// Make request to API
 		$request = [
 			'webapiKey' => $this->apiKey,
 			'countryId' => self::COUNTRY_CODE,
 			'resultScope' => 6, // don't return items and categories, just filters
-			'filterOptions' => $filters,
+			'filterOptions' => $currentFilters,
 		];
-
-		//print_r($request);
-		//exit;
 
 		$result = $this->soap->doGetItemsList($request);
 
-		//print_r($result);
-		//exit;
+		// Process available filters
+		$available = $result->filtersList->item;
+		$available = $this->filterFilters($available);
+		$available = $this->categorizeFilters($available);
 
-		// Group filters into basic / country / category
-		foreach ($result->filtersList->item as $filter) {
-			if (in_array($filter->filterId, self::ALLOWED_BASIC_FILTERS)) {
-				$availableFilters['basic'][] = $filter;
-			} elseif (in_array($filter->filterId, self::ALLOWED_COUNTRY_FILTERS)) {
-				$availableFilters['country'][] = $filter;
-			} elseif ($filter->filterType === 'category') {
-				$availableFilters['category'][] = $filter;
+		//
+		$filters = [
+			'available' => $available,
+			'rejected' => $result->filtersRejected->item ?? [],
+			'itemsCount' => $result->itemsCount,
+		];
+
+		return $filters;
+	}
+
+	private function filterFilters(array $filters): array
+	{
+		foreach ($filters as $key => $filter) {
+			if (
+				$filter->filterType !== 'category'
+				&& (!in_array($filter->filterId, self::BASIC_FILTERS)
+				&& !in_array($filter->filterId, self::COUNTRY_FILTERS))
+			) {
+				unset($filters[$key]);
 			}
 		}
 
-		return $availableFilters;
+		return $filters;
+	}
+
+	private function categorizeFilters(array $filters): array
+	{
+		foreach ($filters as $filter) {
+			if (in_array($filter->filterId, self::BASIC_FILTERS)) {
+				$filter->customCategory = 'basic';
+			} elseif (in_array($filter->filterId, self::COUNTRY_FILTERS)) {
+				$filter->customCategory = 'country';
+			} else {
+				$filter->customCategory = 'category';
+			}
+		}
+
+		return $filters;
 	}
 
 	private function getSoapClient(): \SoapClient
