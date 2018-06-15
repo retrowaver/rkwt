@@ -25,7 +25,7 @@ $( document ).ready(function() {
 
 	//pomyslec nad podzieleniem jakims kodu, zeby nie trzeba bylo go powielac przy edycji searcha
 
-	$(".add-new-filter").click(function() {
+	$(".save-filter").click(function() {
 		var formData = $('#new-search-form').serializeArray();
 		var filterId = $(this).data("filterId");
 
@@ -35,6 +35,8 @@ $( document ).ready(function() {
 		$.each(formData, function() {
 			values.push(this.value);
 		});
+
+		//console.log(values);
 
 
 		////////////////////////////////??DOPISAC SPRAWDZANIE, CZY FILTR O DANYM ID JUZ NIE ISTNIEJE <- to chyba nie ma sensu, lepiej nie wyswietlac takiego filtra na liscie
@@ -46,7 +48,12 @@ $( document ).ready(function() {
 
 
 
-		filterService.addFilter(filterId, values);
+		filterService.saveFilter(filterId, values);
+		//console.log(filterCollection);
+
+
+
+
 		//console.log(filterCollection);
 	});
 
@@ -56,9 +63,17 @@ $( document ).ready(function() {
 		filterService.removeFilter(filterId);
 	});*/
 
+	$('#filters').on('click', '.edit-filter', function(){
+		var filterId = $(this).data("filterid");
+		
+		//console.log(filterId);
+		displayService.displayModal(filterId, true);
+	}); 
+
 	$('#filters').on('click', '.remove-filter', function(){
 		var filterId = $(this).data("filterid");
 		
+		//console.log(filterId);
 	    filterService.removeFilter(filterId);
 	}); 
 

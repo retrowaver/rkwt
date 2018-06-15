@@ -72,6 +72,9 @@ class FilterCollection
 		//idsy zachowuja kolejnosc
 		var meta = [];
 
+		//console.log(ids);
+		//console.log(this._meta);
+
 		$.each(this._meta, function(i, filter){
 			var index = ids.indexOf(filter.filterId);
 			if (index !== -1) {
@@ -84,7 +87,7 @@ class FilterCollection
 
 	getValues(filterId)
 	{
-		return this._meta[filterId];
+		return this._values[filterId];
 	}
 
 	removeValues(filterId)

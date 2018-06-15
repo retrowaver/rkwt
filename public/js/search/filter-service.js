@@ -23,7 +23,7 @@ class FilterService
 		}, this));
 	}
 
-	addFilter(filterId, values)
+	saveFilter(filterId, values)
 	{
 		//add filter to collection
 

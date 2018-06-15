@@ -6,16 +6,27 @@ class DisplayService
 		this._templates = templates;
 	}
 
-	displayModal(filterId)
+	displayModal(filterId, edit = false)
 	{
+		filterId = String(filterId);
+		//console.log([filterId]);
+
 		var filter = this._filterCollection.getMetaByIds([filterId])[0];
+		//console.log(filter);
 
 		var modalTitle = filter.filterName;
 		var modalBody = this._getModalBody(filter);
 
 		$("#new-search-modal").find(".modal-title").html(modalTitle);
 		$("#new-search-modal").find(".modal-body").html(modalBody);
-		$("#new-search-modal").find(".add-new-filter").data('filterId', filter.filterId);
+		$("#new-search-modal").find(".save-filter").data('filterId', filter.filterId); // button
+
+		//
+		if (edit) {
+			var values = this._filterCollection.getValues(filter.filterId);
+			//console.log(values);
+			this._alterModalWithExistingValues(filter, values);
+		}
 
 		$("#new-search-modal").modal('show');
 	}
@@ -37,7 +48,14 @@ class DisplayService
 			'meta': this._filterCollection.getMetaByIds([filterId])[0],
 			'values': this._filterCollection.getValues(filterId),
 		});
-		$("#filters").append(filter);
+
+		//console.log(filterId);
+
+		if (!$("#filters").find('#filter-row-' + filterId).length) {
+			$("#filters").append(filter);
+		} else {
+			$("#filters").find('#filter-row-' + filterId).replaceWith(filter);
+		}
 	}
 
 	removeFilter(filterId)
@@ -57,6 +75,24 @@ class DisplayService
 
 		if (filter.filterControlType === 'textbox') {
 			return this._templates.newSearchTextbox(filter);
+		}
+	}
+
+	_alterModalWithExistingValues(meta, values)
+	{
+		if (meta.filterControlType === 'checkbox') {
+			$.each(values, function(){
+				$("#filter-" + this).prop("checked", true);
+			});
+		} else if (meta.filterControlType === 'combobox') {
+			$("select[name='new-filter-value[]']").val(values[0]);
+		} else if (meta.filterControlType === 'textbox') {
+			if (!meta.filterIsRange) {
+				$("input[name='new-filter-value[]']").val(values[0]);
+			} else {
+				$("#start-value").val(values[0]);
+				$("#end-value").val(values[1]);
+			}
 		}
 	}
 }
