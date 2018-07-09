@@ -2,9 +2,11 @@
 
 namespace App\Service\Allegro;
 
+use Doctrine\Common\Collections\Collection;
+
 interface AllegroServiceInterface
 {
-	public function getItems(array $filters): array;
+	public function getItems(array $filters): Collection;
 
 	public function getFiltersInfo(?array $filters): array;
 }

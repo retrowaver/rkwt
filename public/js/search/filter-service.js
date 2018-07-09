@@ -12,7 +12,7 @@ class FilterService
 
 		//console.log(currentFilters);
 
-		$.getJSON('/ajax/search/filters', {currentFilters}, $.proxy(function(filters) {
+		$.getJSON('/ajax/search/filters', {"currentFilters": currentFilters}, $.proxy(function(filters) {
 			// Save received filters
 			this._filterCollection.setMeta(filters.available);
 

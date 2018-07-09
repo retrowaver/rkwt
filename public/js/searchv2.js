@@ -3,6 +3,7 @@ $( document ).ready(function() {
 	const filterCollection = new FilterCollection();
 	const displayService = new DisplayService(filterCollection, templates);
 	const filterService = new FilterService(filterCollection, displayService);
+	const searchService = new SearchService(filterCollection);
 
 
 	//
@@ -24,6 +25,10 @@ $( document ).ready(function() {
 	filterService.updateMeta();
 
 	//pomyslec nad podzieleniem jakims kodu, zeby nie trzeba bylo go powielac przy edycji searcha
+
+	$(".save-new-search").click(function() {
+		searchService.saveNewSearch();
+	});
 
 	$(".save-filter").click(function() {
 		var formData = $('#new-search-form').serializeArray();

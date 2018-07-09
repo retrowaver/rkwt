@@ -2,19 +2,26 @@
 
 namespace App\Service\Allegro;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use App\Entity\Item;
+
+//use App\Entity\Item;
 
 class AllegroService implements AllegroServiceInterface
 {
 	const API_URL = 'https://webapi.allegro.pl/service.php?wsdl';
 	const COUNTRY_CODE = 1; // 1 for Poland
-	const GET_ITEMS_BATCH_SIZE = 50; // 1-1000
+	const GET_ITEMS_BATCH_SIZE = 1000; // 1-1000
 
 	const BASIC_FILTERS = ['search', 'category', 'userId'];
 	const COUNTRY_FILTERS = ['price', 'condition', 'offerType', 'shippingTime', 'offerOptions'];
 
+	//const PUBLIC_EXCEPTION_CODES = ['ERR_INCORRECT_FILTER_VALUE'];
+
 	private $apiKey;
 	private $soap;
+	private $result; // stores last result from API call
 
 	public function __construct(string $apiKey)
 	{
@@ -23,13 +30,13 @@ class AllegroService implements AllegroServiceInterface
 		$this->soap = $this->getSoapClient();
 	}
 
-	public function getItems(array $filters): array
+	public function getItems(array $filterOptions): Collection
 	{
 		$request = [
 			'webapiKey' => $this->apiKey,
 			'countryId' => self::COUNTRY_CODE,
-			'filterOptions' => $this->convertFiltersToRequest($filters),
-			//'resultScope' => 3, // don't return filters and categories, just items
+			'filterOptions' => $filterOptions,
+			'resultScope' => 3, // don't return filters and categories, just items
 			'resultSize' => self::GET_ITEMS_BATCH_SIZE,
 		];
 
@@ -37,13 +44,15 @@ class AllegroService implements AllegroServiceInterface
 		$itemsList = [];
 		do {
 			$request['resultOffset'] = $offset++ * self::GET_ITEMS_BATCH_SIZE;
-			$result = $this->soap->doGetItemsList($request);
+			$this->result = $this->soap->doGetItemsList($request);
 
-			//print_r($result);
+			//print_r($filterOptions);
+			//print_r($this->result);
+			//exit;
 
 
-			$itemsList = array_merge($itemsList, $result->itemsList->item ?? []);
-		} while (isset($result->itemsList->item));
+			$itemsList = array_merge($itemsList, $this->result->itemsList->item ?? []);
+		} while (isset($this->result->itemsList->item));
 
 		return $this->convertItemsListToItems($itemsList);
 	}
@@ -58,22 +67,44 @@ class AllegroService implements AllegroServiceInterface
 			'filterOptions' => $currentFilters,
 		];
 
-		$result = $this->soap->doGetItemsList($request);
+		$this->result = $this->soap->doGetItemsList($request);
 
 		// Process available filters
-		$available = $result->filtersList->item;
+		$available = $this->result->filtersList->item;
 		$available = $this->filterFilters($available);
 		$available = $this->categorizeFilters($available);
 
 		//
 		$filters = [
 			'available' => $available,
-			'rejected' => $result->filtersRejected->item ?? [],
-			'itemsCount' => $result->itemsCount,
+			'rejected' => $this->result->filtersRejected->item ?? [],
+			'itemsCount' => $this->result->itemsCount,
 		];
 
 		return $filters;
 	}
+
+
+
+
+
+	public function getItemCount(array $filters): int
+	{
+		// Make request to API
+		$request = [
+			'webapiKey' => $this->apiKey,
+			'countryId' => self::COUNTRY_CODE,
+			'resultScope' => 7, // don't return items and categories, just filters
+			'filterOptions' => $filters,
+		];
+
+		$this->result = $this->soap->doGetItemsList($request);
+
+		return (int)$this->result->itemsCount;
+	}
+
+
+
 
 	private function filterFilters(array $filters): array
 	{
@@ -117,7 +148,7 @@ class AllegroService implements AllegroServiceInterface
 		);
 	}
 
-	private function convertFiltersToRequest(array $filters): array
+	/*private function convertFiltersToRequest(array $filters): array
 	{
 		return [
 			[
@@ -129,17 +160,19 @@ class AllegroService implements AllegroServiceInterface
 				'filterValueId' => [76102],
 			]
 		];
-	}
+	}*/
 
-	private function convertItemsListToItems(array $itemsList): array
+	private function convertItemsListToItems(array $itemsList): Collection
 	{
-		$items = [];
+		$items = new ArrayCollection;
 		foreach ($itemsList as $row) {
-			$items[] = new Item(
-				$row->itemId,
-				$row->itemTitle,
-				$row->priceInfo->item[0]->priceValue,
-				$row->photosInfo->item[0]->photoUrl ?? null
+			$items->add(
+				new Item(
+					$row->itemId,
+					$row->itemTitle,
+					$row->priceInfo->item[0]->priceValue,
+					$row->photosInfo->item[0]->photoUrl ?? null
+				)
 			);
 		}
 		return $items;

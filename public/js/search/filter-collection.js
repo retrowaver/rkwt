@@ -36,6 +36,55 @@ class FilterCollection
 		//console.log(filtersForApiRequest);
 	}
 
+
+
+
+
+	getFiltersForPhp()
+	{
+		var filtersForApiRequest = [];
+
+		$.each(this._values, $.proxy(function(filterId, values){
+			var meta = this.getMetaByParameter('filterId', filterId)[0];
+			//console.log(meta);
+
+			var filter = {'filterId': filterId};
+
+			if (!meta.filterIsRange) {
+				filter.filterValues = [];
+				$.each(values, function(key, value){
+					filter.filterValues.push(
+						{'filterValue': value}
+					);
+				});
+
+			} else {
+				if (values[0] !== '') {
+					filter.valueRangeMin = values[0];
+				}
+
+				if (values[1] !== '') {
+					filter.valueRangeMax = values[1];
+				}
+			}
+
+			filtersForApiRequest.push(filter);
+		}, this));
+
+		return filtersForApiRequest;
+		//console.log(filtersForApiRequest);
+	}
+
+
+
+
+
+
+
+
+
+
+
 	addValues(filterId, values)
 	{
 		this._values[filterId] = values;

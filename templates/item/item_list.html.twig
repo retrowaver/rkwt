@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lista przedmiotów{% endblock %}
+
+{% block body %}
+
+    <h1>Lista przedmiotów</h1>
+    
+    <ul>
+    	{% for item in items %}
+			<li>
+			{{ item.auctionTitle }} - <a href="#">...</a>
+			</li>
+		{% endfor %}
+    </ul>
+
+
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}

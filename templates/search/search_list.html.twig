@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lista wyszukiwań{% endblock %}
+
+{% block body %}
+
+    <h1>Lista wyszukiwań</h1>
+    
+    <ul>
+    	
+		{% for search in user.searches %}
+
+			<li>
+			{{ search.name }} - <a href="#">Edytuj</a> - <a href="#">Usun</a>
+			</li>
+
+		{% endfor %}
+    </ul>
+
+
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}
