@@ -43,16 +43,13 @@ class AllegroService implements AllegroServiceInterface
 		$offset = 0;
 		$itemsList = [];
 		do {
+			//echo "Offset: " . ($offset * self::GET_ITEMS_BATCH_SIZE) . "<br>\n";
+
 			$request['resultOffset'] = $offset++ * self::GET_ITEMS_BATCH_SIZE;
 			$this->result = $this->soap->doGetItemsList($request);
 
-			//print_r($filterOptions);
-			//print_r($this->result);
-			//exit;
-
-
 			$itemsList = array_merge($itemsList, $this->result->itemsList->item ?? []);
-		} while (isset($this->result->itemsList->item));
+		} while (isset($this->result->itemsList->item) && count($this->result->itemsList->item) === self::GET_ITEMS_BATCH_SIZE);
 
 		return $this->convertItemsListToItems($itemsList);
 	}

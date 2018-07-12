@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FilterRepository")
@@ -26,21 +27,25 @@ class Filter
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\FilterValue", mappedBy="filter", orphanRemoval=true, cascade={"persist", "remove"})
+     * @Groups({"search_save"})
      */
     private $filterValues;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"search_save"})
      */
     private $valueRangeMin;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"search_save"})
      */
     private $valueRangeMax;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"search_save"})
      */
     private $filterId;
 

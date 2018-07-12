@@ -53,7 +53,7 @@ class SearchUpdateService implements SearchUpdateServiceInterface
                 break;
         }
 
-        dump($search);
+        //dump($search);
         //exit;
 
         //$this->em->persist($search);
@@ -73,7 +73,7 @@ class SearchUpdateService implements SearchUpdateServiceInterface
     {
         // Get live items from API
         $items = $this->allegro->getItems(
-            $search->getFiltersForApiRequest()
+            $search->getFiltersForApi()
         );
 
         // Set items' status to .........................................................................
@@ -93,7 +93,7 @@ class SearchUpdateService implements SearchUpdateServiceInterface
     {
         // Get live items from API
         $itemsFromAllegro = $this->allegro->getItems(
-            $search->getFiltersForApiRequest()
+            $search->getFiltersForApi()
         );
 
         // Get items that haven't been seen before
@@ -123,9 +123,9 @@ class SearchUpdateService implements SearchUpdateServiceInterface
         $inactiveItems = array_filter($inactiveItems, [$this, 'shouldItemBeKept']);
 
 
-        dump($newItems);
-        dump($activeItems);
-        dump($inactiveItems);
+        //dump($newItems);
+        //dump($activeItems);
+        //dump($inactiveItems);
         //exit;
 
 
@@ -145,13 +145,13 @@ class SearchUpdateService implements SearchUpdateServiceInterface
         //dump($items);
         //exit;
 
-        echo $items->count();
+        //echo $items->count();
 
 
         $search->setItems($items);
 
 
-        echo $search->getItems()->count();
+        //echo $search->getItems()->count();
         //exit;
 
 

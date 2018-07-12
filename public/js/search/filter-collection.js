@@ -6,41 +6,20 @@ class FilterCollection
 		this._values = {};
 	}
 
-	getFiltersForApiRequest()
+	// Exports saved filter values in API compatible format
+	getFiltersForApi()
 	{
-		var filtersForApiRequest = [];
+		var filters = [];
+		$.each(this._values, function(i, filter){
+			var filterForApi = Object.assign({}, filter);
+			filterForApi.filterId = i;
+			filters.push(filterForApi);
+		});
 
-		$.each(this._values, $.proxy(function(filterId, values){
-			var meta = this.getMetaByParameter('filterId', filterId)[0];
-			//console.log(meta);
-
-			var filter = {'filterId': filterId};
-
-			if (!meta.filterIsRange) {
-				filter.filterValueId = values;
-			} else {
-				filter.filterValueRange = {};
-				if (values[0] !== '') {
-					filter.filterValueRange.rangeValueMin = values[0];
-				}
-
-				if (values[1] !== '') {
-					filter.filterValueRange.rangeValueMin = values[1];
-				}
-			}
-
-			filtersForApiRequest.push(filter);
-		}, this));
-
-		return filtersForApiRequest;
-		//console.log(filtersForApiRequest);
+		return filters;
 	}
 
-
-
-
-
-	getFiltersForPhp()
+	/*getFiltersForPhp()
 	{
 		var filtersForApiRequest = [];
 
@@ -73,28 +52,44 @@ class FilterCollection
 
 		return filtersForApiRequest;
 		//console.log(filtersForApiRequest);
-	}
+	}*/
 
-
-
-
-
-
-
-
-
-
-
+	// Add values to collection
 	addValues(filterId, values)
 	{
-		this._values[filterId] = values;
+		var isRange = this.getMetaById(filterId).filterIsRange;
+		var current = {};
+
+		if (!isRange) {
+			current.filterValueId = values;
+		} else {
+			current.filterValueRange = {};
+			if (values[0] !== '') {
+				current.filterValueRange.rangeValueMin = values[0];
+			}
+
+			if (values[1] !== '') {
+				current.filterValueRange.rangeValueMax = values[1];
+			}
+		}
+
+		this._values[filterId] = current;
 	}
 
+	// 
 	setMeta(filters)
 	{
 		////////////////////////////////////////////////////////////////this._meta = {};////////////////////////DEVELOPING
 		$.each(filters, $.proxy(function(i, filter){
 			this._meta[filter.filterId] = filter;
+		}, this));
+	}
+
+	setValues(filters)
+	{
+		this._values = {};
+		$.each(filters, $.proxy(function(i, filter){
+			this._values[filter.filterId] = filter;
 		}, this));
 	}
 
@@ -116,8 +111,15 @@ class FilterCollection
 		return meta;
 	}
 
+	getMetaById(id)
+	{
+		return this._meta[id];
+	}
+
 	getMetaByIds(ids)
 	{
+		//???????????????????????
+
 		//idsy zachowuja kolejnosc
 		var meta = [];
 
@@ -132,6 +134,11 @@ class FilterCollection
 		});
 
 		return meta;
+	}
+
+	getFiltersIds()
+	{
+		return Object.keys(this._values);
 	}
 
 	getValues(filterId)

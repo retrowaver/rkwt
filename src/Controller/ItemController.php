@@ -43,7 +43,10 @@ class ItemController extends AbstractController
         $searches = $update->getActiveSearches();
         $update->updateSearches($searches);
 
-        echo 'ee5';
-        exit;
+        //echo 'ee5';
+        //exit;
+        return $this->render('item/item_list.html.twig', [
+            'items' => [],
+        ]);
     }
 }

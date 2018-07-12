@@ -8,7 +8,9 @@ class FilterService
 
 	updateMeta()
 	{
-		var currentFilters = this._filterCollection.getFiltersForApiRequest();
+		var currentFilters = this._filterCollection.getFiltersForApi();
+
+		//console.log(currentFilters);
 
 		//console.log(currentFilters);
 
@@ -16,8 +18,15 @@ class FilterService
 			// Save received filters
 			this._filterCollection.setMeta(filters.available);
 
+			console.log(this._filterCollection);
+
 			// Update displayed filters picker (so it will show updated filters)
 			this._displayService.updateFiltersPicker();
+
+
+
+			
+			this._displayService.displayFilters();
 
 			//LOADER END
 		}, this));

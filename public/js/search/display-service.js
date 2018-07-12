@@ -42,6 +42,14 @@ class DisplayService
 		$("#filters-container").html(select);
 	}
 
+	displayFilters()
+	{
+		var filterIds = this._filterCollection.getFiltersIds();
+		$.each(filterIds, $.proxy(function(i, filterId){
+			this.addFilter(filterId);
+		}, this));
+	}
+
 	addFilter(filterId)
 	{
 		var filter = this._templates.filterDisplay({
@@ -81,17 +89,17 @@ class DisplayService
 	_alterModalWithExistingValues(meta, values)
 	{
 		if (meta.filterControlType === 'checkbox') {
-			$.each(values, function(){
+			$.each(values.filterValueId, function(){
 				$("#filter-" + this).prop("checked", true);
 			});
 		} else if (meta.filterControlType === 'combobox') {
-			$("select[name='new-filter-value[]']").val(values[0]);
+			$("select[name='new-filter-value[]']").val(values.filterValueId[0]);
 		} else if (meta.filterControlType === 'textbox') {
 			if (!meta.filterIsRange) {
-				$("input[name='new-filter-value[]']").val(values[0]);
+				$("input[name='new-filter-value[]']").val(values.filterValueId[0]);
 			} else {
-				$("#start-value").val(values[0]);
-				$("#end-value").val(values[1]);
+				$("#start-value").val(values.filterValueRange.rangeValueMin);
+				$("#end-value").val(values.filterValueRange.rangeValueMax);
 			}
 		}
 	}

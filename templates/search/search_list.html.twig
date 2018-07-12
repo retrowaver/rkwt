@@ -11,7 +11,9 @@
 		{% for search in user.searches %}
 
 			<li>
-			{{ search.name }} - <a href="#">Edytuj</a> - <a href="#">Usun</a>
+			{{ search.name }} - 
+			<a class="btn" href="{{ path("search_edit", {id: search.id}) }}">Edytuj</a>
+			<button type="button" data-search-id="{{ search.id }}" class="btn btn-danger remove-search">Usuń</button>
 			</li>
 
 		{% endfor %}
@@ -21,5 +23,5 @@
 {% endblock %}
 
 {% block javascripts %}
-
+	<script src="/js/search-list.js"></script>
 {% endblock %}

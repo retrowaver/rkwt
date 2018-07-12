@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SearchRepository")
@@ -26,11 +27,13 @@ class Search
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"search_edit", "search_save"})
      */
     private $name;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Filter", mappedBy="search", orphanRemoval=true, cascade={"persist", "remove"})
+     * @Groups({"search_save"})
      */
     private $filters;
 
@@ -55,6 +58,13 @@ class Search
         return $this->id;
     }
 
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
     public function getUser(): ?User
     {
         return $this->user;
@@ -67,6 +77,9 @@ class Search
         return $this;
     }
 
+    /**
+     * @Groups({"default"})
+     */
     public function getName(): ?string
     {
         return $this->name;
@@ -77,6 +90,29 @@ class Search
         $this->name = $name;
         return $this;
     }
+
+    public function setFilters(Collection $filters): self
+    {
+        $this->filters->clear();
+        foreach($filters as $filter) {
+            $this->addFilter($filter);
+        }
+
+        return $this;
+    }
+
+
+
+
+    /*public function clearFilters()
+    {
+        $this->filters->clear();
+    }*/
+
+
+
+
+
 
     /**
      * @return Collection|Filter[]
@@ -109,7 +145,10 @@ class Search
         return $this;
     }
 
-    public function getFiltersForApiRequest(): array
+    /**
+     * @Groups({"search_edit"})
+     */
+    public function getFiltersForApi(): array
     {
         $filters = [];
 

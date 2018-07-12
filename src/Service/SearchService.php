@@ -11,9 +11,21 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
+
+
+
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+// For annotations
+use Doctrine\Common\Annotations\AnnotationReader;
+use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
+
+
+
+
+
 class SearchService implements SearchServiceInterface
 {
-	const NEW_SEARCH_MAX_ITEMS_COUNT = 1000;
+	const NEW_SEARCH_MAX_ITEMS_COUNT = 2000;
 
 	private $allegro;
 
@@ -24,16 +36,19 @@ class SearchService implements SearchServiceInterface
 
 	public function denormalizeSearch(?array $searchData): Search
     {
-        $normalizer = new ObjectNormalizer(null, null, null, new ReflectionExtractor());
+        $searchData = $this->preDenormalizeSearch($searchData);
+
+        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+        $normalizer = new ObjectNormalizer($classMetadataFactory, null, null, new ReflectionExtractor());
         $serializer = new Serializer(array($normalizer, new ArrayDenormalizer()));
 
-        return $serializer->denormalize($searchData, Search::class);
+        return $serializer->denormalize($searchData, Search::class, null, ['groups' => ['search_save']]);
     }
 
     public function validateSearch(Search $search)
     {
     	try {
-    		$itemCount = $this->allegro->getItemCount($search->getFiltersForApiRequest());
+    		$itemCount = $this->allegro->getItemCount($search->getFiltersForApi());
     	} catch (\SoapFault $e) {
     		return $e->getMessage();
     	}
@@ -49,6 +64,34 @@ class SearchService implements SearchServiceInterface
     	return true;
     }
 
+    private function preDenormalizeSearch(array $searchData): array
+    {
+        // Ugly as hell, but I have no idea how to do it in more elegant way
+        $newFilters = [];
+        foreach ($searchData['filters'] as $filter) {
+            $newFilter = ['filterId' => $filter['filterId']];
+            
+            if (isset($filter['filterValueId'])) {
+                $newFilter['filterValues'] = [];
+                foreach ($filter['filterValueId'] as $filterValue) {
+                    $newFilter['filterValues'][] = ['filterValue' => $filterValue];
+                }
+            } elseif (isset($filter['filterValueRange'])) {
+                if (isset($filter['filterValueRange']['rangeValueMin'])) {
+                    $newFilter['valueRangeMin'] = $filter['filterValueRange']['rangeValueMin'];
+                }
+                
+                if (isset($filter['filterValueRange']['rangeValueMax'])) {
+                    $newFilter['valueRangeMax'] = $filter['filterValueRange']['rangeValueMax'];
+                }
+            }
+            
+            $newFilters[] = $newFilter;
+        }
+        $searchData['filters'] = $newFilters;
+
+        return $searchData;
+    }
 
 
 

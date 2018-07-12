@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FilterValueRepository")
@@ -18,6 +19,7 @@ class FilterValue
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"search_save"})
      */
     private $filterValue;
 
