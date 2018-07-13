@@ -26,25 +26,32 @@ class ItemRepository extends ServiceEntityRepository
 //     * @return Item[] Returns an array of Item objects
 //     */
     
-    public function findByUserId(int $userId): Collection
+    public function findByUserId(int $userId, array $statuses = []): Collection
     {
-        $queryBuilder = $this ->createQueryBuilder('my_repository');
+        $queryBuilder = $this ->createQueryBuilder('i');
+
+        $queryBuilder
+            ->where(
+                $queryBuilder->expr()->in(
+                    'i.search',
+                    $this
+                        ->createQueryBuilder('subquery_repository')
+                        ->select('s.id')
+                        ->from(Search::class, 's')
+                        ->where('s.user = :user')
+                        ->getDQL()
+                )
+            )
+            ->orderBy('i.timeFound', 'DESC')
+            ->setParameter(':user', $userId);
+
+        if (!empty($statuses)) {
+            $queryBuilder->andWhere("i.status IN(:statuses)")
+                ->setParameter(':statuses', $statuses);
+        }
 
         return new ArrayCollection(
-            $queryBuilder
-                ->where(
-                    $queryBuilder->expr()->in(
-                        'my_repository.search',
-                        $this
-                            ->createQueryBuilder('subquery_repository')
-                            ->select('s.id')
-                            ->from(Search::class, 's')
-                            ->where('s.user = :user')
-                            ->getDQL()
-                    )
-                )
-                ->setParameter(':user', $userId)
-                ->getQuery()
+            $queryBuilder->getQuery()
                 ->getResult()
         );
     }

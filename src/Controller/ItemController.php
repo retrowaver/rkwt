@@ -28,7 +28,10 @@ class ItemController extends AbstractController
      */
     public function itemList(ItemRepository $itemRepository)
     {
-    	$items = $itemRepository->findByUserId($this->getUser()->getId());
+    	$items = $itemRepository->findByUserId(
+            $this->getUser()->getId(),
+            [1, 2]
+        );
 
         return $this->render('item/item_list.html.twig', [
             'items' => $items,

@@ -4,19 +4,48 @@
 
 {% block body %}
 
-    <h1>Lista przedmiotów</h1>
+    <h1>Twoje znalezione przedmioty</h1>
     
-    <ul>
+    <table class="table table-bordered" id="item-list">
+	   <thead class="thead">
+	    <tr>
+	      <th scope="col">Numer aukcji</th>
+	      <th scope="col">Zdjęcie</th>
+	      <th scope="col">Tytuł aukcji</th>
+	      <th scope="col">Cena</th>
+	      <th scope="col">Czas znalezienia</th>
+	      <th scope="col">Akcje</th>
+	    </tr>
+	  </thead>
+	  <tbody>
     	{% for item in items %}
-			<li>
-			{{ item.auctionTitle }} - <a href="#">...</a>
-			</li>
+    		<tr data-item-id="{{ item.id }}">
+	    		<th scope="row">{{ item.auctionId }}</th>
+				<td>
+					{% if item.auctionImage|length %}
+					<img src="{{ item.auctionImage }}" />
+					{% else %}
+					-
+					{% endif %}
+				</td>
+				<td>{{ item.auctionTitle }}</td>
+				<td>{{ item.auctionPrice|number_format(2, ',', ' ') }}</td>
+				<td>{{ item.timeFound|date('Y-m-d H:i:s') }}</td>
+				<td>
+					<button type="button" data-item-id="{{ item.id }}" class="btn btn-danger remove-item">Usuń</button>
+				</td>
+			</tr>
 		{% endfor %}
-    </ul>
+    
+		</tbody>
+    </table>
+
 
 
 {% endblock %}
 
 {% block javascripts %}
-
+	<script src="/js/item_list/includes/display-service.js"></script>
+	<script src="/js/item_list/includes/item-service.js"></script>
+	<script src="/js/item_list/functions.js"></script>
 {% endblock %}

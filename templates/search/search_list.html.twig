@@ -1,27 +1,41 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Lista wyszukiwań{% endblock %}
+{% block title %}Twoje wyszukiwania{% endblock %}
 
 {% block body %}
 
-    <h1>Lista wyszukiwań</h1>
+
+    <h1>Twoje wyszukiwania</h1>
     
-    <ul>
+    <table class="table table-bordered" id="search-list">
+	   <thead class="thead">
+	    <tr>
+	      <th scope="col">Nazwa wyszukiwania</th>
+	      <th scope="col">Akcje</th>
+	    </tr>
+	  </thead>
+	  <tbody>
     	
 		{% for search in user.searches %}
 
-			<li>
-			{{ search.name }} - 
-			<a class="btn" href="{{ path("search_edit", {id: search.id}) }}">Edytuj</a>
-			<button type="button" data-search-id="{{ search.id }}" class="btn btn-danger remove-search">Usuń</button>
-			</li>
+			<tr data-search-id="{{ search.id }}">
+				<td>{{ search.name }}</td>
+				<td>
+					<a class="btn btn-info" href="{{ path("search_edit", {id: search.id}) }}">Edytuj</a>
+					<button type="button" data-search-id="{{ search.id }}" class="btn btn-danger remove-search">Usuń</button>
+				</td>
+			</tr>
 
 		{% endfor %}
-    </ul>
+
+		</tbody>
+    </table>
 
 
 {% endblock %}
 
 {% block javascripts %}
-	<script src="/js/search-list.js"></script>
+	<script src="/js/search_list/includes/display-service.js"></script>
+	<script src="/js/search_list/includes/search-service.js"></script>
+	<script src="/js/search_list/functions.js"></script>
 {% endblock %}
