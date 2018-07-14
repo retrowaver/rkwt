@@ -9,25 +9,31 @@ class DisplayService
 	displayModal(filterId, edit = false)
 	{
 		filterId = String(filterId);
-		//console.log([filterId]);
 
-		var filter = this._filterCollection.getMetaByIds([filterId])[0];
-		//console.log(filter);
+		var meta = this._filterCollection.getMetaByIds([filterId])[0];
 
-		var modalTitle = filter.filterName;
-		var modalBody = this._getModalBody(filter);
+		var modalTitle = meta.filterName;
+		var modalBody = this._getModalBody(meta);
 
 		$("#new-search-modal").find(".modal-title").html(modalTitle);
 		$("#new-search-modal").find(".modal-body").html(modalBody);
-		$("#new-search-modal").find(".save-filter").data('filterId', filter.filterId); // button
+		$("#new-search-modal").find(".save-filter").data('filterId', meta.filterId); // button
 
 		//
 		if (edit) {
-			var values = this._filterCollection.getValues(filter.filterId);
+			var values = this._filterCollection.getValues(meta.filterId);
 			//console.log(values);
-			this._alterModalWithExistingValues(filter, values);
+			this._alterModalWithExistingValues(meta, values);
 		}
 
+		//special stuff for special types of filters
+		if (meta.filterId === 'category') {
+			this.updateCategoryPickerTree();
+		}
+
+
+
+		//
 		$("#new-search-modal").modal('show');
 	}
 
@@ -71,36 +77,88 @@ class DisplayService
 		$("#filters").find('#filter-row-' + filterId).remove();
 	}
 
-	_getModalBody(filter)
+	updateCategoryPickerTree(categoryId = null)
 	{
-		if (filter.filterControlType === 'combobox') {
-			return this._templates.newSearchCombobox(filter);
+		if (categoryId === null) {
+			categoryId = $("#category-id").val();
 		}
 
-		if (filter.filterControlType === 'checkbox') {
-			return this._templates.newSearchCheckbox(filter);
+		$.getJSON('/ajax/category/get/' + categoryId, {}, $.proxy(function(data) {
+			data.isCurrentCategoryTopLevel = (categoryId == 0);
+
+			$("#category-picker-list").html(
+				this._templates.newSearchCategoryPickerList(data)
+			);
+		}, this));
+	}
+
+	_getModalBody(meta)
+	{
+		// Special forms
+		switch (meta.filterId) {
+			case 'category':
+				return this._templates.newSearchCategory(meta);
+				break;
 		}
 
-		if (filter.filterControlType === 'textbox') {
-			return this._templates.newSearchTextbox(filter);
+		// Standard forms
+		switch (meta.filterControlType) {
+			case 'combobox':
+				return this._templates.newSearchCombobox(meta);
+				break;
+			case 'checkbox':
+				return this._templates.newSearchCheckbox(meta);
+				break;
+			case 'textbox':
+				return this._templates.newSearchTextbox(meta);
+				break;
 		}
 	}
 
 	_alterModalWithExistingValues(meta, values)
 	{
-		if (meta.filterControlType === 'checkbox') {
-			$.each(values.filterValueId, function(){
-				$("#filter-" + this).prop("checked", true);
-			});
-		} else if (meta.filterControlType === 'combobox') {
-			$("select[name='new-filter-value[]']").val(values.filterValueId[0]);
-		} else if (meta.filterControlType === 'textbox') {
-			if (!meta.filterIsRange) {
-				$("input[name='new-filter-value[]']").val(values.filterValueId[0]);
-			} else {
-				$("#start-value").val(values.filterValueRange.rangeValueMin);
-				$("#end-value").val(values.filterValueRange.rangeValueMax);
-			}
+		// Special forms
+		switch (meta.filterId) {
+			case 'category':
+				this._alterCategoryModalWithExistingValues(meta, values);
+				return true;
+				break;
+		}
+
+		// Standard forms
+		switch (meta.filterControlType) {
+			case 'checkbox':
+				this._alterCheckboxModalWithExistingValues(meta, values);
+				break;
+			case 'combobox':
+				this._alterComboboxModalWithExistingValues(meta, values);
+				break;
+			case 'textbox':
+				this._alterTextboxModalWithExistingValues(meta, values);
+				break;
+		}
+	}
+
+	_alterCategoryModalWithExistingValues(meta, values) {
+		$("input[name='new-filter-value[]']").val(values.filterValueId[0]);
+	}
+
+	_alterCheckboxModalWithExistingValues(meta, values) {
+		$.each(values.filterValueId, function(){
+			$("#filter-" + this).prop("checked", true);
+		});
+	}
+
+	_alterComboboxModalWithExistingValues(meta, values) {
+		$("select[name='new-filter-value[]']").val(values.filterValueId[0]);
+	}
+
+	_alterTextboxModalWithExistingValues(meta, values) {
+		if (!meta.filterIsRange) {
+			$("input[name='new-filter-value[]']").val(values.filterValueId[0]);
+		} else {
+			$("#start-value").val(values.filterValueRange.rangeValueMin);
+			$("#end-value").val(values.filterValueRange.rangeValueMax);
 		}
 	}
 }

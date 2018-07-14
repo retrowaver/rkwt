@@ -72,4 +72,25 @@
 		{{/if}}
 	</form>
 </script>
+
+<script id="new-search-category-template" type="text/x-handlebars-template">
+	<form id="new-search-form">
+		<div id="category-picker-list">
+
+		</div>
+		<input type="hidden" class="form-control" name="new-filter-value[]" id="category-id" value="0">
+	</form>
+</script>
+
+<script id="new-search-category-picker-list-template" type="text/x-handlebars-template">
+	<ul>
+	{{#if parentCategory}}
+		<li class="category-to-pick" data-category-id="{{parentCategory.catParent}}">wstecz ({{parentCategory.catName}})</li>
+	{{/if}}
+
+	{{#each categories}}
+		<li class="category-to-pick" data-category-id="{{catId}}">{{catName}}</li>
+	{{/each}}
+	</ul>
+</script>
 {% endverbatim %}

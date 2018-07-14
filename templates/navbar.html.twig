@@ -19,7 +19,7 @@
     				</li>
                 {% else %}
                     <li class="nav-item">
-                        <a href="{{ path("login") }}" class="nav-link">Logowanie</a>
+                        <a href="{{ path("login") }}" class="nav-link{% if app.request.attributes.get('_route') starts with 'login' %} active{% endif %}">Logowanie</a>
                     </li>
                 {% endif %}
 			</ul>

@@ -5,6 +5,7 @@ namespace App\Service\Allegro;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\Entity\Item;
+use App\Entity\Category;
 
 //use App\Entity\Item;
 
@@ -52,6 +53,31 @@ class AllegroService implements AllegroServiceInterface
 		} while (isset($this->result->itemsList->item) && count($this->result->itemsList->item) === self::GET_ITEMS_BATCH_SIZE);
 
 		return $this->convertItemsListToItems($itemsList);
+	}
+
+	public function getCategories(): Collection
+	{
+		$request = [
+			'webapiKey' => $this->apiKey,
+			'countryId' => self::COUNTRY_CODE,
+		];
+
+		$this->result = $this->soap->doGetCatsData($request);
+
+		$categories = new ArrayCollection;
+		foreach ($this->result->catsList->item as $row) {
+			$category = new Category;
+
+			$category->setCatId($row->catId);
+			$category->setCatName($row->catName);
+			$category->setCatParent($row->catParent);
+			$category->setCatPosition($row->catPosition);
+			$category->setCatIsLeaf($row->catIsLeaf);
+
+			$categories->add($category);
+		}
+
+		return $categories;
 	}
 
 	public function getFiltersInfo(?array $currentFilters = null): array

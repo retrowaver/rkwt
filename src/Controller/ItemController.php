@@ -52,4 +52,31 @@ class ItemController extends AbstractController
             'items' => [],
         ]);
     }
+
+    /**
+     * @Route("/item/test2", name="item_test2")
+     */
+    public function test2(AllegroServiceInterface $allegro)
+    {
+        $categories = $allegro->getCategories();
+
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $batchSize = 50;
+        $i = 0;
+        foreach ($categories as $category) {
+            $entityManager->persist($category);
+
+            $i++;
+            if ($i % $batchSize === 0) {
+                $entityManager->flush();
+                $entityManager->clear();
+            }
+        }
+
+        $entityManager->flush();
+        $entityManager->clear();
+        
+        exit;
+    }
 }

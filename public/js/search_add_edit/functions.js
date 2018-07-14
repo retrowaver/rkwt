@@ -4,6 +4,14 @@ const displayService = new DisplayService(filterCollection, templates);
 const filterService = new FilterService(filterCollection, displayService);
 const searchService = new SearchService(filterCollection, filterService, displayService);
 
+//
+$(document).on("click", ".category-to-pick", function() {
+	var categoryId = $(this).data("category-id");
+
+	$("#category-id").val(categoryId);
+	displayService.updateCategoryPickerTree(categoryId);
+});
+
 $(".save-new-search").click(function() {
 	searchService.saveNewSearch();
 });
