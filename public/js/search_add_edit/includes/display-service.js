@@ -24,7 +24,18 @@ class DisplayService
 			var values = this._filterCollection.getValues(meta.filterId);
 			//console.log(values);
 			this._alterModalWithExistingValues(meta, values);
+
+
+			//////////
+			// Assumption that ...
+			this.enableSaveButton();
+			//////////
+		} else {
+			this.disableSaveButton();
 		}
+
+
+
 
 		//special stuff for special types of filters
 		if (meta.filterId === 'category') {
@@ -89,7 +100,24 @@ class DisplayService
 			$("#category-picker-list").html(
 				this._templates.newSearchCategoryPickerList(data)
 			);
+
+			//
+			if (data.parentCategory !== null && data.parentCategory.catIsLeaf) {
+				this.enableSaveButton();
+			} else {
+				this.disableSaveButton();
+			}
 		}, this));
+	}
+
+	disableSaveButton()
+	{
+		$(".save-filter").attr("disabled", true);
+	}
+
+	enableSaveButton()
+	{
+		$(".save-filter").attr("disabled", false);
 	}
 
 	_getModalBody(meta)

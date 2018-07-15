@@ -53,6 +53,7 @@
 <script id="new-search-combobox-template" type="text/x-handlebars-template">
 	<form id="new-search-form">
 		<select name="new-filter-value[]">
+			<option disabled selected>-- Wybierz --</option>
 			{{#each filterValues.item}}
 			<option value="{{filterValueId}}">{{filterValueName}}</option>
 			{{/each}}

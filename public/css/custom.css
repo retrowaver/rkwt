@@ -16,3 +16,8 @@ h1, h2, h3, h4, h5, h6 {
 .navbar {
 	margin-bottom: 35px;
 }
+
+.btn-success:disabled {
+	background: #AAA !important;
+	border-color: #888;
+}

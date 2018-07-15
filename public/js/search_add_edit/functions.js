@@ -4,6 +4,19 @@ const displayService = new DisplayService(filterCollection, templates);
 const filterService = new FilterService(filterCollection, displayService);
 const searchService = new SearchService(filterCollection, filterService, displayService);
 
+const dataContainer = {
+	'currentFilter': null
+};
+
+//validation
+$("#new-search-modal").on("change", "input, select", function() {
+	if (filterService.validateFilter(dataContainer.currentFilter)) {
+		displayService.enableSaveButton();
+	} else {
+		displayService.disableSaveButton();
+	}
+});
+
 //
 $(document).on("click", ".category-to-pick", function() {
 	var categoryId = $(this).data("category-id");
@@ -12,6 +25,7 @@ $(document).on("click", ".category-to-pick", function() {
 	displayService.updateCategoryPickerTree(categoryId);
 });
 
+//
 $(".save-new-search").click(function() {
 	searchService.saveNewSearch();
 });
@@ -23,16 +37,15 @@ $(".save-edited-search").click(function() {
 });
 
 $(".save-filter").click(function() {
-	var formData = $('#new-search-form').serializeArray();
+	
 	var filterId = $(this).data("filterId");
 	//var isRange = filterCollection.getMetaByIds([filterId])[0].filterIsRange;
 
 	//console.log(formData);
 
-	var values = [];
-	$.each(formData, function() {
-		values.push(this.value);
-	});
+	var values = filterService.getValuesFromForm();
+
+	//console.log(values);
 
 	//console.log(values);
 
@@ -45,14 +58,10 @@ $(".save-filter").click(function() {
 	//console.log(values);
 
 
-
-	filterService.saveFilter(filterId, values);
-	//console.log(filterCollection);
-
-
-
-
-	//console.log(filterCollection);
+	if (filterService.validateFilter(filterId)) {
+		filterService.saveFilter(filterId, values);
+		$('#new-search-modal').modal('hide');
+	}
 });
 
 /*$(".remove-filter").click(function() {
@@ -65,6 +74,7 @@ $('#filters').on('click', '.edit-filter', function(){
 	var filterId = $(this).data("filterid");
 	
 	//console.log(filterId);
+	dataContainer.currentFilter = filterId;
 	displayService.displayModal(filterId, true);
 }); 
 
@@ -84,6 +94,10 @@ $(".new-filter").click(function() {
 		alert('Najpierw wybierz rodzaj filtra'); //robocze
 		return true;
 	}
+
+	//
+	dataContainer.currentFilter = filterId;
+
 
 	displayService.displayModal(filterId);
 });
