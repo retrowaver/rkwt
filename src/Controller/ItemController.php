@@ -24,13 +24,15 @@ use App\Service\Allegro\AllegroServiceInterface;
 class ItemController extends AbstractController
 {
     /**
-     * @Route("/item/list", name="item_list")
+     * @Route("/item/list", defaults={"page": "1"}, name="item_list")
+     * @Route("/item/list/{page}", requirements={"page": "[1-9]\d*"}, name="item_list_paginated")
      */
-    public function itemList(ItemRepository $itemRepository)
+    public function itemList(int $page, ItemRepository $itemRepository)
     {
-    	$items = $itemRepository->findByUserId(
+    	$items = $itemRepository->findLatest(
             $this->getUser()->getId(),
-            [1, 2]
+            [1, 2],
+            $page
         );
 
         return $this->render('item/item_list.html.twig', [

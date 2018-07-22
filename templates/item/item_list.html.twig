@@ -1,16 +1,13 @@
 {% extends 'base.html.twig' %}
 
+{% block meta_title %}Lista przedmiotów{% endblock %}
 {% block title %}Lista przedmiotów{% endblock %}
 
 {% block body %}
-
-    <h1>Twoje znalezione przedmioty</h1>
-    
-    <table class="table table-bordered" id="item-list">
+	<table class="table table-hover" id="item-list">
 	   <thead class="thead">
 	    <tr>
-	      <th scope="col">Numer aukcji</th>
-	      <th scope="col">Zdjęcie</th>
+	      <th scope="col"><i class="far fa-image"></i></th>
 	      <th scope="col">Tytuł aukcji</th>
 	      <th scope="col">Cena</th>
 	      <th scope="col">Czas znalezienia</th>
@@ -20,19 +17,36 @@
 	  <tbody>
     	{% for item in items %}
     		<tr data-item-id="{{ item.id }}">
-	    		<th scope="row">{{ item.auctionId }}</th>
 				<td>
-					{% if item.auctionImage|length %}
-					<img src="{{ item.auctionImage }}" />
-					{% else %}
-					-
-					{% endif %}
+					<a target="_blank" href="http://allegro.pl/show_item.php?item={{ item.auctionId }}">
+						{% if item.auctionImage|length %}
+							<img class="auction-photo" src="{{ item.auctionImage }}" />
+						{% else %}
+							-
+						{% endif %}
+					</a>
 				</td>
-				<td>{{ item.auctionTitle }}</td>
-				<td>{{ item.auctionPrice|number_format(2, ',', ' ') }}</td>
-				<td>{{ item.timeFound|date('Y-m-d H:i:s') }}</td>
 				<td>
-					<button type="button" data-item-id="{{ item.id }}" class="btn btn-danger remove-item">Usuń</button>
+					<a target="_blank" href="http://allegro.pl/show_item.php?item={{ item.auctionId }}">
+						{{ item.auctionTitle }} <i class="fas fa-external-link-alt small-icon"></i>
+					</a>
+				</td>
+				<td>
+					{{ item.auctionPrice|number_format(2, ',', ' ') }} zł
+				</td>
+				<td>
+					{% if "now"|date('Y-m-d') == item.timeFound|date('Y-m-d') %}
+						Dzisiaj,
+					{% elseif "1 day ago"|date('Y-m-d') == item.timeFound|date('Y-m-d') %}
+						Wczoraj,
+					{% else %}
+						{{ item.timeFound|localizeddate('medium', 'none') }},
+					{% endif %}
+					
+					{{ item.timeFound|localizeddate('none', 'short') }}
+				</td>
+				<td>
+					<button type="button" data-item-id="{{ item.id }}" class="btn btn-danger remove-item"><i class="fas fa-times"></i> Usuń</button>
 				</td>
 			</tr>
 		{% endfor %}
@@ -40,6 +54,9 @@
 		</tbody>
     </table>
 
+    <div class="pagerfanta">
+    	{{ pagerfanta(items, 'twitter_bootstrap4_translated', {routeName: 'item_list_paginated', css_container_class: 'pagination justify-content-center'}) }}
+    </div>
 
 
 {% endblock %}

@@ -4,6 +4,7 @@ class FilterCollection
 	{
 		this._meta = {};
 		this._values = {};
+		//this._descriptions = {};
 	}
 
 	// Exports saved filter values in API compatible format
@@ -79,7 +80,7 @@ class FilterCollection
 	// 
 	setMeta(filters)
 	{
-		////////////////////////////////////////////////////////////////this._meta = {};////////////////////////DEVELOPING
+		this._meta = {};
 		$.each(filters, $.proxy(function(i, filter){
 			this._meta[filter.filterId] = filter;
 		}, this));
@@ -139,6 +140,11 @@ class FilterCollection
 	getFiltersIds()
 	{
 		return Object.keys(this._values);
+	}
+
+	getMetaIds()
+	{
+		return Object.keys(this._meta);
 	}
 
 	getValues(filterId)

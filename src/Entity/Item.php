@@ -9,6 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Item
 {
+    const MAX_PER_PAGE = 5;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

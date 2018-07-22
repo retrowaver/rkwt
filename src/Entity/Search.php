@@ -16,6 +16,7 @@ class Search
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"search_edit"})
      */
     private $id;
 
@@ -143,6 +144,15 @@ class Search
         }
 
         return $this;
+    }
+
+    public function getFiltersIds(): array
+    {
+        return $this->getFilters()->map(
+            function($s) {
+                return $s->getFilterId();
+            }
+        )->toArray();
     }
 
     /**

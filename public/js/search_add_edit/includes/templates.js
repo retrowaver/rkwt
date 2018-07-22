@@ -10,8 +10,12 @@ class Templates
 		this.newSearchCategory = Handlebars.compile($("#new-search-category-template").html());
 		this.newSearchCategoryPickerList = Handlebars.compile($("#new-search-category-picker-list-template").html());
 
+		this.newSearchUserId = Handlebars.compile($("#new-search-user-id-template").html());
+
 		//this.newSearchTextboxDatetime = Handlebars.compile($("#new-search-textbox-datetime-template").html());
 
 		this.filterDisplay = Handlebars.compile($("#filter-display-template").html());
+
+		this.filterDescriptionBadges = Handlebars.compile($("#filter-description-badge-template").html());
 	}
 }

@@ -10,5 +10,9 @@ interface AllegroServiceInterface
 
 	public function getCategories(): Collection;
 
+	public function getUserId(string $username): int;
+
+	public function getUsername(int $userId): string;
+
 	public function getFiltersInfo(?array $filters): array;
 }

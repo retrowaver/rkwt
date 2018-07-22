@@ -57,6 +57,14 @@ class DisplayService
 		});
 
 		$("#filters-container").html(select);
+		//console.log(this._filterCollection.meta);
+
+
+		// disabling already used filters - should be rewritten somehow
+		var currentFiltersIds = this._filterCollection.getFiltersIds();
+		$.each(currentFiltersIds, function(i, filterId){
+			$("#filters-container").find("option[value='" + filterId + "']").attr("disabled", true);
+		});
 	}
 
 	displayFilters()
@@ -88,6 +96,34 @@ class DisplayService
 		$("#filters").find('#filter-row-' + filterId).remove();
 	}
 
+	displayError(errorMessage)
+	{
+	    $.alert({
+	        title: 'Błąd',
+	        content: errorMessage,
+	    });
+	}
+
+	openChangeSearchNameInput(searchName)
+	{
+		$(".change-search-name-input").show().focus().val("").val(
+			validator.unescape(searchName)
+		);
+		$(".search-name").hide();
+		$(".change-search-name").hide();
+	}
+
+	// Hides stuff and replaces search name
+	closeChangeSearchNameInput(newSearchName)
+	{
+		$(".search-name").html(
+			validator.escape(newSearchName)
+		);
+		$(".search-name").show();
+		$(".change-search-name").show();
+		$(".change-search-name-input").hide();
+	}
+
 	updateCategoryPickerTree(categoryId = null)
 	{
 		if (categoryId === null) {
@@ -104,8 +140,10 @@ class DisplayService
 			//
 			if (data.parentCategory !== null && data.parentCategory.catIsLeaf) {
 				this.enableSaveButton();
+				$(".chosen-category-info").html('Wybrana kategoria: ' + data.parentCategory.catName);
 			} else {
 				this.disableSaveButton();
+				$(".chosen-category-info").html();
 			}
 		}, this));
 	}
@@ -120,12 +158,87 @@ class DisplayService
 		$(".save-filter").attr("disabled", false);
 	}
 
+	updateDescriptions()
+	{
+		var filterIds = this._filterCollection.getFiltersIds();
+		$.each(filterIds, $.proxy(function(i, filterId){
+			this.updateDescription(filterId);
+		}, this));
+	}
+
+	updateDescription(filterId)
+	{
+		$("#filter-row-" + filterId).find(".filter-value-description").html(
+			this._templates.filterDescriptionBadges(
+				{
+					badges: this._getDescription(filterId)
+				}
+			)
+		);
+	}
+
+	_getDescription(filterId)
+	{
+		var values = this._filterCollection.getValues(filterId);
+		var meta = this._filterCollection.getMetaById(filterId);
+		
+		//
+		/*switch (meta.filterId) {
+			case
+		}*/
+
+		switch (meta.filterControlType) {
+			case 'checkbox':
+				return this._getDescriptionForCheckbox(values, meta);
+				break;
+			case 'combobox':
+				return this._getDescriptionForCombobox(values, meta);
+				break;
+			case 'textbox':
+				return this._getDescriptionForTextbox(values, meta);
+				break;
+		}
+	}
+
+	_getDescriptionForCheckbox(values, meta)
+	{
+		//console.log(values);
+		//return ['Zaznaczono filtrów: ' + values.filterValueId.length];
+		return ['...'];
+	}
+
+	_getDescriptionForCombobox(values, meta)
+	{
+		return [''];
+	}
+
+	_getDescriptionForTextbox(values, meta)
+	{
+		//console.log(values);
+		var content = [];
+		if (meta.filterIsRange) {
+			if (values.filterValueRange.rangeValueMin) {
+				content.push('od ' + values.filterValueRange.rangeValueMin);
+			}
+			if (values.filterValueRange.rangeValueMax) {
+				content.push('do ' + values.filterValueRange.rangeValueMax);
+			}
+		} else {
+			content.push(values.filterValueId[0]);
+		}
+
+		return content;
+	}
+
 	_getModalBody(meta)
 	{
 		// Special forms
 		switch (meta.filterId) {
 			case 'category':
 				return this._templates.newSearchCategory(meta);
+				break;
+			case 'userId':
+				return this._templates.newSearchUserId(meta);
 				break;
 		}
 
@@ -151,6 +264,10 @@ class DisplayService
 				this._alterCategoryModalWithExistingValues(meta, values);
 				return true;
 				break;
+			case 'userId':
+				this._alterUserIdModalWithExistingValues(meta, values);
+				return true;
+				break;
 		}
 
 		// Standard forms
@@ -167,21 +284,36 @@ class DisplayService
 		}
 	}
 
-	_alterCategoryModalWithExistingValues(meta, values) {
+	_alterUserIdModalWithExistingValues(meta, values)
+	{
+		var userId = values.filterValueId[0];
+		$("input[name='new-filter-value[]']").val(userId);
+
+		//
+		$.getJSON('/ajax/allegro/username', {userId: userId}, $.proxy(function(data) {
+			$("#user-id-picker-username").val(data.username);
+		}, this));
+	}
+
+	_alterCategoryModalWithExistingValues(meta, values)
+	{
 		$("input[name='new-filter-value[]']").val(values.filterValueId[0]);
 	}
 
-	_alterCheckboxModalWithExistingValues(meta, values) {
+	_alterCheckboxModalWithExistingValues(meta, values)
+	{
 		$.each(values.filterValueId, function(){
 			$("#filter-" + this).prop("checked", true);
 		});
 	}
 
-	_alterComboboxModalWithExistingValues(meta, values) {
+	_alterComboboxModalWithExistingValues(meta, values)
+	{
 		$("select[name='new-filter-value[]']").val(values.filterValueId[0]);
 	}
 
-	_alterTextboxModalWithExistingValues(meta, values) {
+	_alterTextboxModalWithExistingValues(meta, values)
+	{
 		if (!meta.filterIsRange) {
 			$("input[name='new-filter-value[]']").val(values.filterValueId[0]);
 		} else {

@@ -25,7 +25,13 @@ use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 
 class SearchService implements SearchServiceInterface
 {
-	const NEW_SEARCH_MAX_ITEMS_COUNT = 2000;
+    const NEW_SEARCH_MAX_ITEMS_COUNT = 2000;
+
+    const ERROR_DEFAULT = 'Nieznany błąd. Skontaktuj się z administratorem.';
+    const ERROR_TOO_MANY_ITEMS = 'Znaleziono zbyt dużo przedmiotów (%d, podczas gdy limit wynosi %d). Spróbuj zawęzić kryteria wyszukiwania.';
+    const ERROR_SEARCH_NAME_TOO_LONG = 'Nazwa wyszukiwania jest zbyt długa.';
+
+    const SEARCH_NAME_MAX_LENGTH = 40;
 
 	private $allegro;
 
@@ -45,23 +51,89 @@ class SearchService implements SearchServiceInterface
         return $serializer->denormalize($searchData, Search::class, null, ['groups' => ['search_save']]);
     }
 
+    public function sanitizeSearch(Search $search): Search
+    {
+        $search->setName(trim($search->getName()));
+
+        return $search;
+    }
+
     public function validateSearch(Search $search)
     {
+        // Check search against Allegro API
+        //
+        // If API error code is known (i.e. ERR_INCORRECT_FILTER_VALUE), then
+        // pass it directly to user. If it's not, then display a default error.
     	try {
-    		$itemCount = $this->allegro->getItemCount($search->getFiltersForApi());
+            $filtersInfo = $this->allegro->getFiltersInfo($search->getFiltersForApi());
     	} catch (\SoapFault $e) {
-    		return $e->getMessage();
+            switch ($e->faultcode) {
+                case 'ERR_INCORRECT_FILTER_VALUE':
+                    return $e->getMessage();
+                    break;
+                default:
+                     return self::ERROR_DEFAULT;
+            }
     	}
 
-    	if ($itemCount > self::NEW_SEARCH_MAX_ITEMS_COUNT) {
+        // Check if any filters were rejected by Allegro API
+        // (this should only happen due to user modifying the request)
+        // https://allegro.pl/webapi/documentation.php/show/id,1342#method-output
+        if (!empty($filtersInfo['rejected'])) {
+            return self::ERROR_DEFAULT;
+        }
+
+        // Check the amount of items found
+    	if ($filtersInfo['itemsCount'] > self::NEW_SEARCH_MAX_ITEMS_COUNT) {
     		return sprintf(
-    			"Znaleziono zbyt dużo przedmiotów (%d, podczas gdy limit wynosi %d). Spróbuj zawęzić kryteria wyszukiwania.",
-    			$itemCount,
+    			self::ERROR_TOO_MANY_ITEMS,
+    			$filtersInfo['itemsCount'],
     			self::NEW_SEARCH_MAX_ITEMS_COUNT
     		);
     	}
 
+        // Check whether any filters are duplicated
+        // (this should only happen due to user modifying the request)
+        if ($this->hasSearchDuplicatedFilterIds($search)) {
+            return self::ERROR_DEFAULT;
+        }
+
+        // Check whether there are any filters with unexpected ids
+        // (this case should be ruled out by "rejected" check above, but better safe than sorry)
+        if ($this->hasSearchUnexpectedFilterIds($search, $filtersInfo['available'])) {
+            return self::ERROR_DEFAULT;
+        }
+
+
+
+
+        //
+        if (strlen($search->getName()) > self::SEARCH_NAME_MAX_LENGTH) {
+            return self::ERROR_SEARCH_NAME_TOO_LONG;
+        }
+
     	return true;
+    }
+
+    private function hasSearchUnexpectedFilterIds(Search $search, array $availableFiltersFromAllegro): bool
+    {
+        $filterIds = $search->getFiltersIds();
+
+        $filterIdsFromAllegro = array_map(
+            function($f) {
+                return $f->filterId;
+            },
+            $availableFiltersFromAllegro
+        );
+
+        return (count(array_diff($filterIds, $filterIdsFromAllegro)) > 0);
+    }
+
+    private function hasSearchDuplicatedFilterIds(Search $search): bool
+    {
+        $filterIds = $search->getFiltersIds();
+
+        return (count($filterIds) !== count(array_unique($filterIds)));
     }
 
     private function preDenormalizeSearch(array $searchData): array

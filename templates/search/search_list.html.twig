@@ -1,13 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Twoje wyszukiwania{% endblock %}
+{% block meta_title %}Twoje wyszukiwania{% endblock %}
+{% block title %}
+	Twoje wyszukiwania
+	<a href="{{ path("search_new") }}" class="btn btn-outline-info">
+		<i class="fas fa-plus"></i> Utwórz
+	</a>
+{% endblock %}
 
 {% block body %}
-
-
-    <h1>Twoje wyszukiwania</h1>
-    
-    <table class="table table-bordered" id="search-list">
+    <table class="table table-hover" id="search-list">
 	   <thead class="thead">
 	    <tr>
 	      <th scope="col">Nazwa wyszukiwania</th>
@@ -21,8 +23,8 @@
 			<tr data-search-id="{{ search.id }}">
 				<td>{{ search.name }}</td>
 				<td>
-					<a class="btn btn-info" href="{{ path("search_edit", {id: search.id}) }}">Edytuj</a>
-					<button type="button" data-search-id="{{ search.id }}" class="btn btn-danger remove-search">Usuń</button>
+					<a class="btn btn-info" href="{{ path("search_edit", {id: search.id}) }}"><i class="far fa-edit"></i> Edytuj</a>
+					<button type="button" data-search-id="{{ search.id }}" class="btn btn-danger remove-search"><i class="fas fa-times"></i> Usuń</button>
 				</td>
 			</tr>
 

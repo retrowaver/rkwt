@@ -43,5 +43,6 @@ security:
          - { path: ^/search, roles: ROLE_USER }
          - { path: ^/ajax, roles: ROLE_USER }
          - { path: ^/item, roles: ROLE_USER }
+         - { path: ^/user, roles: ROLE_USER }
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }

@@ -6,27 +6,36 @@ class FilterService
 		this._displayService = displayService;
 	}
 
-	updateMeta()
+	//not just meta
+	updateMeta(edit = false)
 	{
-		var currentFilters = this._filterCollection.getFiltersForApi();
+		var basicFilters = ['category', 'userId', 'search']; //this should be moved somewhere
+		var currentIds = this._filterCollection.getFiltersIds();
 
-		//console.log(currentFilters);
+		//
+		if (basicFilters.filter(x => -1 !== currentIds.indexOf(x)).length) {
+			var currentFilters = this._filterCollection.getFiltersForApi();
+		} else {
+			var currentFilters = [];
+			$.each(currentIds, $.proxy(function(i, filterId){
+				this.removeFilter(filterId);
+			}, this));
+		}
 
-		//console.log(currentFilters);
-
-		$.getJSON('/ajax/search/filters', {"currentFilters": currentFilters}, $.proxy(function(filters) {
+		$.getJSON('/ajax/allegro/filters', {"currentFilters": currentFilters}, $.proxy(function(filters) {
 			// Save received filters
 			this._filterCollection.setMeta(filters.available);
-
-			console.log(this._filterCollection);
 
 			// Update displayed filters picker (so it will show updated filters)
 			this._displayService.updateFiltersPicker();
 
+			this._removeIncompatibleFilters();
 
 
-			
-			this._displayService.displayFilters();
+			if (edit) {
+				this._displayService.displayFilters();
+				this._displayService.updateDescriptions();
+			}
 
 			//LOADER END
 		}, this));
@@ -51,8 +60,20 @@ class FilterService
 		//remove filter from collection
 		this._filterCollection.removeValues(filterId);
 
+
 		//remove filter from display
 		this._displayService.removeFilter(filterId);
+	}
+
+	getUserIdByUsername(username) {
+		$.getJSON('/ajax/allegro/userid', {username: username}, $.proxy(function(data) {
+			$("#user-id").val(data.userId);
+			if (data.userId > 0) {
+				displayService.enableSaveButton();
+			} else {
+				displayService.disableSaveButton();
+			}
+		}, this));
 	}
 
 	getValuesFromForm()
@@ -129,40 +150,17 @@ class FilterService
 			}
 		}
 
-
-
-
-
-		/*
-		//ugly af, should be rewritten
-
-		var empty = true;
-		var valid = true;
-		$.each(values, function(i, value){
-			if (value !== '') {
-				empty = false; 
-			} else {
-				return;
-			}
-
-			if (!valid) {
-				return false;
-			}
-
-			//
-			if (meta.filterDataType === 'long' || meta.filterDataType === 'int') {
-				valid = validator.isInt(value, {allow_leading_zeroes: false});
-			} else if (meta.filterDataType === 'float') {
-				if (meta.filterId === 'price') {
-					valid = (validator.isDecimal(value, {locale: 'pl-PL', decimal_digits: '0,2'}) && validator.isFloat(value, {locale: 'pl-PL', min: 0}));
-				} else {
-					valid = validator.isDecimal(value, {locale: 'pl-PL'});
-				}
-			}
-		});
-
-		return (!empty && valid);*/
-
 		return true;
+	}
+
+	_removeIncompatibleFilters() {
+		var valueIds = this._filterCollection.getFiltersIds();
+		var metaIds = this._filterCollection.getMetaIds();
+
+		// https://stackoverflow.com/a/33034768
+		var diff = valueIds.filter(x => !metaIds.includes(x));
+		$.each(diff, $.proxy(function(i, filterId){
+			this.removeFilter(filterId);
+		}, this));
 	}
 }

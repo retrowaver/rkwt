@@ -45,6 +45,7 @@ class SearchController extends AbstractController
     {
         return $this->render('search/search_edit.html.twig', [
             'searchId' => $search->getId(), // data will be retrieved later using ajax
+            'searchName' => $search->getName()
         ]);
     }
 

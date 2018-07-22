@@ -9,6 +9,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
+use Doctrine\ORM\Query;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
+
 /**
  * @method Item|null find($id, $lockMode = null, $lockVersion = null)
  * @method Item|null findOneBy(array $criteria, array $orderBy = null)
@@ -26,7 +30,7 @@ class ItemRepository extends ServiceEntityRepository
 //     * @return Item[] Returns an array of Item objects
 //     */
     
-    public function findByUserId(int $userId, array $statuses = []): Collection
+    public function findLatest(int $userId, array $statuses = [], int $page = 1): Pagerfanta
     {
         $queryBuilder = $this ->createQueryBuilder('i');
 
@@ -50,10 +54,28 @@ class ItemRepository extends ServiceEntityRepository
                 ->setParameter(':statuses', $statuses);
         }
 
-        return new ArrayCollection(
+        $query = $queryBuilder->getQuery();
+        //dump($query);
+        //exit;
+
+        //dump($this->createPaginator($query, $page));
+        //exit;
+
+        return $this->createPaginator($query, $page);
+
+        /*return new ArrayCollection(
             $queryBuilder->getQuery()
                 ->getResult()
-        );
+        );*/
+    }
+
+    private function createPaginator(Query $query, int $page): Pagerfanta
+    {
+        $paginator = new Pagerfanta(new DoctrineORMAdapter($query));
+        $paginator->setMaxPerPage(Item::MAX_PER_PAGE);
+        $paginator->setCurrentPage($page);
+
+        return $paginator;
     }
     
 

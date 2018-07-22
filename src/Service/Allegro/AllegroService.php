@@ -55,6 +55,40 @@ class AllegroService implements AllegroServiceInterface
 		return $this->convertItemsListToItems($itemsList);
 	}
 
+	public function getUserId(string $username): int
+	{
+		$request = [
+			'webapiKey' => $this->apiKey,
+			'countryId' => self::COUNTRY_CODE,
+			'userLogin' => $username
+		];
+
+		try {
+			$this->result = $this->soap->doGetUserID($request);
+		} catch(\SoapFault $e) {
+			return 0;
+		}
+		
+		return $this->result->userId;
+	}
+
+	public function getUsername(int $userId): string
+	{
+		$request = [
+			'webapiKey' => $this->apiKey,
+			'countryId' => self::COUNTRY_CODE,
+			'userId' => $userId
+		];
+
+		try {
+			$this->result = $this->soap->doGetUserLogin($request);
+		} catch(\SoapFault $e) {
+			return '';
+		}
+
+		return $this->result->userLogin;
+	}
+
 	public function getCategories(): Collection
 	{
 		$request = [

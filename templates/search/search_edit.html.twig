@@ -1,32 +1,41 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edycja wyszukiwania{% endblock %}
+{% block meta_title %}Edycja wyszukiwania{% endblock %}
+{% block title %}
+    	Edycja wyszukiwania:
+   		<input class="change-search-name-input" type="text" value="" style="display: none;" />
+   		<span class="change-search-name">
+   			<span class="search-name">{{ searchName }}</span>
+   			<a href="#"><i class="far fa-edit small-icon"></i></a>
+   		</span>
+{% endblock %}
 
 {% block body %}
+	<div class="card bg-light" id="filters-card">
+		<div class="card-body">
+			<h3>
+				<strong>Filtry </strong>
+				<button type="button" class="btn btn-outline-info show-filter-picker">
+					    	<i class="fas fa-plus"></i> Dodaj filtr
+				</button>
+			</h3>
 
-    <h1>Edycja wyszukiwania</h1>
-    <p>test</p>
-    <h2>Nowy filtr:
-	    <select id="filters-container"></select>
-	    <button type="button" class="btn btn-outline-success new-filter">
-	    	Dodaj
+
+			    <div id="filters">
+
+   				 </div>
+		</div>
+	</div>
+
+	<div>
+	    <button type="button" class="btn btn-info btn-lg save-edited-search">
+	    	<i class="fas fa-save"></i> Zapisz wyszukiwanie
 	    </button>
-    </h2>
 
-    <div id="filters">
-
-    </div>
-
-
-    <br><br><br>
-    <button type="button" class="btn btn-success btn-lg save-edited-search">
-    	Zapisz wyszukiwanie
-    </button>
-
-    <button type="button" class="btn btn-success btn-lg save-new-search">
-    	Zapisz wyszukiwanie jako nowe
-    </button>
-
+	    <button type="button" class="btn btn-info btn-lg save-new-search">
+	    	<i class="fas fa-certificate"></i> Zapisz jako nowe
+	    </button>
+	</div>
 
 
     <input type="hidden" name="searchId" value="{{ searchId }}" />
