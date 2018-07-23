@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Tools;
 
 use App\Entity\Search;
 use Doctrine\Common\Collections\Collection;

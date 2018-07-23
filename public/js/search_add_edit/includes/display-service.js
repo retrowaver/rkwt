@@ -1,9 +1,10 @@
 class DisplayService
 {
-	constructor(filterCollection, templates)
+	constructor(filterCollection, templates, dataContainer)
 	{
 		this._filterCollection = filterCollection;
 		this._templates = templates;
+		this._dataContainer = dataContainer;
 	}
 
 	displayModal(filterId, edit = false)
@@ -130,7 +131,7 @@ class DisplayService
 			categoryId = $("#category-id").val();
 		}
 
-		$.getJSON('/ajax/category/get/' + categoryId, {}, $.proxy(function(data) {
+		$.getJSON('/ajax/category/get/' + categoryId, {csrfToken: this._dataContainer.csrfToken}, $.proxy(function(data) {
 			data.isCurrentCategoryTopLevel = (categoryId == 0);
 
 			$("#category-picker-list").html(
@@ -290,7 +291,7 @@ class DisplayService
 		$("input[name='new-filter-value[]']").val(userId);
 
 		//
-		$.getJSON('/ajax/allegro/username', {userId: userId}, $.proxy(function(data) {
+		$.getJSON('/ajax/allegro/username', {userId: userId, csrfToken: this._dataContainer.csrfToken}, $.proxy(function(data) {
 			$("#user-id-picker-username").val(data.username);
 		}, this));
 	}

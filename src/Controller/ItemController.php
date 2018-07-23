@@ -10,8 +10,8 @@ use App\Repository\ItemRepository;
 
 
 ///////////////test
-use App\Service\SearchUpdateService;
-use App\Service\SearchUpdateServiceInterface;
+use App\Service\Tools\SearchUpdateService;
+use App\Service\Tools\SearchUpdateServiceInterface;
 /////////
 
 //////tylko robocze
@@ -53,32 +53,5 @@ class ItemController extends AbstractController
         return $this->render('item/item_list.html.twig', [
             'items' => [],
         ]);
-    }
-
-    /**
-     * @Route("/item/test2", name="item_test2")
-     */
-    public function test2(AllegroServiceInterface $allegro)
-    {
-        $categories = $allegro->getCategories();
-
-        $entityManager = $this->getDoctrine()->getManager();
-
-        $batchSize = 50;
-        $i = 0;
-        foreach ($categories as $category) {
-            $entityManager->persist($category);
-
-            $i++;
-            if ($i % $batchSize === 0) {
-                $entityManager->flush();
-                $entityManager->clear();
-            }
-        }
-
-        $entityManager->flush();
-        $entityManager->clear();
-        
-        exit;
     }
 }

@@ -15,7 +15,7 @@ class SearchService
 			filters: this._filterCollection.getFiltersForApi()
 		};
 
-		$.getJSON('/ajax/search/save', {search: search}, $.proxy(function(data) {
+		$.getJSON('/ajax/search/save', {search: search, csrfToken: this._dataContainer.csrfToken}, $.proxy(function(data) {
 			if (!data.success) {
 				this._displayService.displayError(data.error);
 			}
@@ -31,7 +31,7 @@ class SearchService
 			filters: this._filterCollection.getFiltersForApi()
 		};
 
-		$.getJSON('/ajax/search/edit/' + this._dataContainer.filterData.id, {search: search}, $.proxy(function(data) {
+		$.getJSON('/ajax/search/edit/' + this._dataContainer.filterData.id, {search: search, csrfToken: this._dataContainer.csrfToken}, $.proxy(function(data) {
 			if (!data.success) {
 				this._displayService.displayError(data.error);
 			}
@@ -40,7 +40,7 @@ class SearchService
 
 	loadSearch(searchId)
 	{
-		$.getJSON('/ajax/search/get/' + searchId, {}, $.proxy(function(search) {
+		$.getJSON('/ajax/search/get/' + searchId, {csrfToken: this._dataContainer.csrfToken}, $.proxy(function(search) {
 
 			//console.log(search);
 

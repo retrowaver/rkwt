@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\Collection;
 
 interface AllegroServiceInterface
 {
-	public function getItems(array $filters): Collection;
+	public function getItems(array $filters, bool $onlyRecent = false): Collection;
 
 	public function getCategories(): Collection;
 

@@ -1,9 +1,10 @@
 class FilterService
 {
-	constructor(filterCollection, displayService)
+	constructor(filterCollection, displayService, dataContainer)
 	{
 		this._filterCollection = filterCollection;
 		this._displayService = displayService;
+		this._dataContainer = dataContainer;
 	}
 
 	//not just meta
@@ -22,7 +23,7 @@ class FilterService
 			}, this));
 		}
 
-		$.getJSON('/ajax/allegro/filters', {"currentFilters": currentFilters}, $.proxy(function(filters) {
+		$.getJSON('/ajax/allegro/filters', {"currentFilters": currentFilters, csrfToken: this._dataContainer.csrfToken}, $.proxy(function(filters) {
 			// Save received filters
 			this._filterCollection.setMeta(filters.available);
 
@@ -66,7 +67,7 @@ class FilterService
 	}
 
 	getUserIdByUsername(username) {
-		$.getJSON('/ajax/allegro/userid', {username: username}, $.proxy(function(data) {
+		$.getJSON('/ajax/allegro/userid', {username: username, csrfToken: this._dataContainer.csrfToken}, $.proxy(function(data) {
 			$("#user-id").val(data.userId);
 			if (data.userId > 0) {
 				displayService.enableSaveButton();

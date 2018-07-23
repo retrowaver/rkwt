@@ -10,23 +10,6 @@ use App\Entity\Search;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
-
-
-
-
-
-
-use Doctrine\Common\Collections\ArrayCollection;
-
-
-
-
-
-
-
-
-
-
 class SearchController extends AbstractController
 {
     /**
@@ -54,8 +37,6 @@ class SearchController extends AbstractController
      */
     public function searchList()
     {
-        //dump($this->getUser()->getSearches()->first()->getFilters()->first()->getFilterValues()->first());
-
         return $this->render('search/search_list.html.twig', [
             'user' => $this->getUser(),
         ]);

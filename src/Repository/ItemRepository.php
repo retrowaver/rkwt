@@ -46,7 +46,7 @@ class ItemRepository extends ServiceEntityRepository
                         ->getDQL()
                 )
             )
-            ->orderBy('i.timeFound', 'DESC')
+            ->orderBy('i.id', 'DESC')
             ->setParameter(':user', $userId);
 
         if (!empty($statuses)) {

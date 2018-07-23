@@ -5,23 +5,13 @@ namespace App\Service;
 use App\Entity\Search;
 use App\Service\Allegro\AllegroService;
 use App\Service\Allegro\AllegroServiceInterface;
-
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-
-
-
-
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
-// For annotations
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
-
-
-
-
 
 class SearchService implements SearchServiceInterface
 {
@@ -103,10 +93,7 @@ class SearchService implements SearchServiceInterface
         if ($this->hasSearchUnexpectedFilterIds($search, $filtersInfo['available'])) {
             return self::ERROR_DEFAULT;
         }
-
-
-
-
+        
         //
         if (strlen($search->getName()) > self::SEARCH_NAME_MAX_LENGTH) {
             return self::ERROR_SEARCH_NAME_TOO_LONG;

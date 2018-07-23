@@ -1,14 +1,12 @@
-const dataContainer = {
-	currentFilter: null,
-	filterData: {
-		name: 'bez nazwy'
-	}
+dataContainer.currentFilter = null;
+dataContainer.filterData = {
+	name: 'bez nazwy'
 };
 
 const templates = new Templates();
 const filterCollection = new FilterCollection();
-const displayService = new DisplayService(filterCollection, templates);
-const filterService = new FilterService(filterCollection, displayService);
+const displayService = new DisplayService(filterCollection, templates, dataContainer);
+const filterService = new FilterService(filterCollection, displayService, dataContainer);
 const searchService = new SearchService(filterCollection, filterService, displayService, dataContainer);
 
 
@@ -84,6 +82,9 @@ $(".save-edited-search").click(function() {
 
 $(".show-filter-picker").click(function() {
 	$("#filter-picker-modal").modal('show');
+
+
+	//console.log(filterCollection._meta);
 });
 
 $(".save-filter").click(function() {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Ajax;
 
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class AllegroAjaxController extends AbstractController
 {
     /**
-     * @Route("/ajax/allegro/filters", name="ajax_allegro_filters")
+     * @Route("/ajax/allegro/filters", name="ajax_allegro_filters", condition="request.isXmlHttpRequest()")
      */
     public function getAvailableFilters(Request $request, AllegroServiceInterface $allegro): JsonResponse
     {
@@ -21,7 +21,7 @@ class AllegroAjaxController extends AbstractController
     }
 
     /**
-     * @Route("/ajax/allegro/userid", name="ajax_allegro_user_id")
+     * @Route("/ajax/allegro/userid", name="ajax_allegro_user_id", condition="request.isXmlHttpRequest()")
      */
     public function getUserIdByUsername(Request $request, AllegroServiceInterface $allegro): JsonResponse
     {
@@ -31,7 +31,7 @@ class AllegroAjaxController extends AbstractController
     }
 
     /**
-     * @Route("/ajax/allegro/username", name="ajax_allegro_username")
+     * @Route("/ajax/allegro/username", name="ajax_allegro_username", condition="request.isXmlHttpRequest()")
      */
     public function getUsernameByUserId(Request $request, AllegroServiceInterface $allegro): JsonResponse
     {

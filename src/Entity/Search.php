@@ -48,6 +48,16 @@ class Search
      */
     private $items;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $timeLastSearched;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $timeLastFullySearched;
+
     public function __construct()
     {
         $this->filters = new ArrayCollection();
@@ -233,6 +243,30 @@ class Search
     {
         $this->items->clear();
         $this->addItems($items);
+
+        return $this;
+    }
+
+    public function getTimeLastSearched(): ?\DateTimeInterface
+    {
+        return $this->timeLastSearched;
+    }
+
+    public function setTimeLastSearched(?\DateTimeInterface $timeLastSearched): self
+    {
+        $this->timeLastSearched = $timeLastSearched;
+
+        return $this;
+    }
+
+    public function getTimeLastFullySearched(): ?\DateTimeInterface
+    {
+        return $this->timeLastFullySearched;
+    }
+
+    public function setTimeLastFullySearched(?\DateTimeInterface $timeLastFullySearched): self
+    {
+        $this->timeLastFullySearched = $timeLastFullySearched;
 
         return $this;
     }

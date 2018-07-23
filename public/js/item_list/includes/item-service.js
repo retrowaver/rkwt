@@ -1,13 +1,14 @@
 class ItemService
 {
-	constructor(displayService)
+	constructor(displayService, dataContainer)
 	{
 		this._displayService = displayService;
+		this._dataContainer = dataContainer;
 	}
 
 	removeItem(itemId)
 	{
-		$.getJSON('/ajax/item/remove/' + itemId, null, $.proxy(function() {
+		$.getJSON('/ajax/item/remove/' + itemId, {csrfToken: this._dataContainer.csrfToken}, $.proxy(function() {
 			this._displayService.removeItem(itemId);
 		}, this));
 	}

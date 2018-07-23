@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Tools;
 
 use App\Entity\Item;
 use App\Entity\Search;
@@ -53,12 +53,6 @@ class SearchUpdateService implements SearchUpdateServiceInterface
                 break;
         }
 
-        //dump($search);
-        //exit;
-
-        //$this->em->persist($search);
-
-        //$this->em->merge($search);
         $this->em->flush();
     }
 
@@ -87,9 +81,50 @@ class SearchUpdateService implements SearchUpdateServiceInterface
 
         // Change search's status to "default active" (1)
         $search->setStatus(1);
+
+        $search->setTimeLastSearched(new \DateTime('now'));
+        $search->setTimeLastFullySearched(new \DateTime('now'));
     }
 
     private function updateStandardSearch(Search $search): void
+    {
+        if (
+            $search->getTimeLastSearched() > new \DateTime('1 hour ago')
+            && $search->getTimeLastFullySearched() > new \DateTime('1 day ago')
+        ) {
+            $this->updateStandardSearchQuickly($search);
+        } else {
+            $this->updateStandardSearchFully($search);
+        }
+    }
+
+    private function updateStandardSearchQuickly(Search $search)
+    {
+        // Get live items from API
+        $itemsFromAllegro = $this->allegro->getItems(
+            $search->getFiltersForApi(),
+            true
+        );
+
+        // Get items that haven't been seen before
+        $newItems = array_udiff(
+            $itemsFromAllegro->toArray(),
+            $search->getItems()->toArray(),
+            function ($a, $b) {return $a->getAuctionId() <=> $b->getAuctionId();}
+        );
+        $this->itemService->setStatus($newItems, 2);
+        $this->itemService->setSearch($newItems, $search);
+
+        $items = new ArrayCollection(
+            $newItems
+        );
+
+        $search->addItems($items);
+
+        $search->setTimeLastSearched(new \DateTime('now'));
+    }
+
+    private function updateStandardSearchFully(Search $search)
     {
         // Get live items from API
         $itemsFromAllegro = $this->allegro->getItems(
@@ -154,8 +189,10 @@ class SearchUpdateService implements SearchUpdateServiceInterface
         //echo $search->getItems()->count();
         //exit;
 
+        $search->setTimeLastSearched(new \DateTime('now'));
+        $search->setTimeLastFullySearched(new \DateTime('now'));
 
-        //dodac do current searcha itemy, ktorych nie ma w nim (ze statusem 2)
+        //dodac do current searcha itemy, ktorych nie ma w nim (ze statusem 2) ?????????? co autor mial na mysli?        
     }
 
     private function shouldItemBeKept(Item $item): bool

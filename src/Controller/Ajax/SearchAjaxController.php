@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Ajax;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -35,7 +35,7 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 class SearchAjaxController extends AbstractController
 {
     /**
-     * @Route("/ajax/search/save", name="ajax_search_save")
+     * @Route("/ajax/search/save", name="ajax_search_save", condition="request.isXmlHttpRequest()")
      */
     public function saveSearch(Request $request, SearchServiceInterface $searchService): JsonResponse
     {
@@ -61,7 +61,7 @@ class SearchAjaxController extends AbstractController
     }
 
     /**
-     * @Route("/ajax/search/edit/{id}", requirements={"id": "\d+"}, name="ajax_search_edit")
+     * @Route("/ajax/search/edit/{id}", requirements={"id": "\d+"}, name="ajax_search_edit", condition="request.isXmlHttpRequest()")
      * @Security("user == search.getUser()")
      */
     public function editSearch(Request $request, SearchServiceInterface $searchService, Search $search): JsonResponse
@@ -71,6 +71,9 @@ class SearchAjaxController extends AbstractController
 
         $search->setName($editedSearch->getName());
         $search->setFilters($editedSearch->getFilters());
+
+        $search->setStatus(0);
+        $search->setTimeLastSearched(null);
 
         $errorMessage = $searchService->validateSearch($search);
         if (!is_string($errorMessage)) {
@@ -85,25 +88,20 @@ class SearchAjaxController extends AbstractController
     }
 
     /**
-     * @Route("/ajax/search/get/{id}", requirements={"id": "\d+"}, name="ajax_search_get")
+     * @Route("/ajax/search/get/{id}", requirements={"id": "\d+"}, name="ajax_search_get", condition="request.isXmlHttpRequest()")
+     * @Security("user == search.getUser()")
      */
     public function getSearch(Search $search): JsonResponse
     {
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
         $encoders = [new JsonEncoder()];
 
-
-        //$normalizers = [new ObjectNormalizer($classMetadataFactory)];
         $normalizer = new ObjectNormalizer($classMetadataFactory);
         $normalizers = [$normalizer];
 
 
         $serializer = new Serializer($normalizers, $encoders);
-
-        /*$normalizer->setCircularReferenceHandler(function ($object) {
-            return $object->getId();
-        });*/
-
+        
         $jsonContent = $serializer->serialize(
             $search,
             'json',
@@ -116,7 +114,7 @@ class SearchAjaxController extends AbstractController
     }
 
     /**
-     * @Route("/ajax/search/remove/{id}", requirements={"id": "\d+"}, name="ajax_search_remove")
+     * @Route("/ajax/search/remove/{id}", requirements={"id": "\d+"}, name="ajax_search_remove", condition="request.isXmlHttpRequest()")
      * @Security("user == search.getUser()")
      */
     public function removeSearch(Search $search): JsonResponse

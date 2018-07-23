@@ -1,5 +1,5 @@
 const displayService = new DisplayService();
-const searchService = new SearchService(displayService);
+const searchService = new SearchService(displayService, dataContainer);
 
 $(".remove-search").click(function() {
 	var searchId = $(this).data("search-id");

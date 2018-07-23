@@ -17,7 +17,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity(
  *     fields={"email"},
- *     message="This email is already registered. Please choose a different url."
+ *     message="Podany adres e-mail jest już przypisany do innego użytkownika."
  *     )
  */
 class User implements UserInterface, \Serializable

@@ -54,10 +54,11 @@
 		</tbody>
     </table>
 
+{% if items is not empty %}
     <div class="pagerfanta">
     	{{ pagerfanta(items, 'twitter_bootstrap4_translated', {routeName: 'item_list_paginated', css_container_class: 'pagination justify-content-center'}) }}
     </div>
-
+{% endif %}
 
 {% endblock %}
 

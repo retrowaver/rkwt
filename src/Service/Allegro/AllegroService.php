@@ -18,8 +18,6 @@ class AllegroService implements AllegroServiceInterface
 	const BASIC_FILTERS = ['search', 'category', 'userId'];
 	const COUNTRY_FILTERS = ['price', 'condition', 'offerType', 'shippingTime', 'offerOptions'];
 
-	//const PUBLIC_EXCEPTION_CODES = ['ERR_INCORRECT_FILTER_VALUE'];
-
 	private $apiKey;
 	private $soap;
 	private $result; // stores last result from API call
@@ -31,7 +29,7 @@ class AllegroService implements AllegroServiceInterface
 		$this->soap = $this->getSoapClient();
 	}
 
-	public function getItems(array $filterOptions): Collection
+	public function getItems(array $filterOptions, bool $onlyRecent = false): Collection
 	{
 		$request = [
 			'webapiKey' => $this->apiKey,
@@ -41,11 +39,18 @@ class AllegroService implements AllegroServiceInterface
 			'resultSize' => self::GET_ITEMS_BATCH_SIZE,
 		];
 
+		//
+		if ($onlyRecent) {
+			$request['filterOptions'][] = [
+				'filterId' => 'startingTime',
+				'filterValueId' => ['2h'],
+			];
+		}
+
+		//
 		$offset = 0;
 		$itemsList = [];
 		do {
-			//echo "Offset: " . ($offset * self::GET_ITEMS_BATCH_SIZE) . "<br>\n";
-
 			$request['resultOffset'] = $offset++ * self::GET_ITEMS_BATCH_SIZE;
 			$this->result = $this->soap->doGetItemsList($request);
 
@@ -204,20 +209,6 @@ class AllegroService implements AllegroServiceInterface
 			]
 		);
 	}
-
-	/*private function convertFiltersToRequest(array $filters): array
-	{
-		return [
-			[
-				'filterId' => 'search',
-				'filterValueId' => ['stephen king christine'],
-			],
-			[
-				'filterId' => 'category',
-				'filterValueId' => [76102],
-			]
-		];
-	}*/
 
 	private function convertItemsListToItems(array $itemsList): Collection
 	{
