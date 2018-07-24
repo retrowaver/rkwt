@@ -18,9 +18,9 @@ class SearchService
 		$.getJSON('/ajax/search/save', {search: search, csrfToken: this._dataContainer.csrfToken}, $.proxy(function(data) {
 			if (!data.success) {
 				this._displayService.displayError(data.error);
+			} else {
+				window.location.href = '/search/list';
 			}
-
-			//redirect
 		}, this));
 	}
 
@@ -34,6 +34,8 @@ class SearchService
 		$.getJSON('/ajax/search/edit/' + this._dataContainer.filterData.id, {search: search, csrfToken: this._dataContainer.csrfToken}, $.proxy(function(data) {
 			if (!data.success) {
 				this._displayService.displayError(data.error);
+			} else {
+				window.location.href = '/search/list';
 			}
 		}, this));
 	}

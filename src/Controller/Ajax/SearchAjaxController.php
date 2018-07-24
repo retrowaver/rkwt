@@ -51,6 +51,11 @@ class SearchAjaxController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($search);
             $entityManager->flush();
+
+            $this->addFlash(
+                'notice',
+                'Dodano wyszukiwanie!'
+            );
         }
 
         return new JsonResponse([
@@ -74,11 +79,17 @@ class SearchAjaxController extends AbstractController
 
         $search->setStatus(0);
         $search->setTimeLastSearched(null);
+        $search->setTimeLastFullySearched(null);
 
         $errorMessage = $searchService->validateSearch($search);
         if (!is_string($errorMessage)) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
+
+            $this->addFlash(
+                'notice',
+                'Zapisano zmiany!'
+            );
         }
 
         return new JsonResponse([

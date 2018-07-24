@@ -139,7 +139,8 @@ class DisplayService
 			);
 
 			//
-			if (data.parentCategory !== null && data.parentCategory.catIsLeaf) {
+			//if (data.parentCategory !== null && data.parentCategory.catIsLeaf) {
+			if (data.parentCategory !== null) {
 				this.enableSaveButton();
 				$(".chosen-category-info").html('Wybrana kategoria: ' + data.parentCategory.catName);
 			} else {

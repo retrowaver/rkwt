@@ -54,6 +54,8 @@ class FilterService
 		//add filter to display
 
 		this._displayService.addFilter(filterId);
+
+		//console.log(this._filterCollection);
 	}
 
 	removeFilter(filterId)

@@ -18,6 +18,10 @@ class AllegroService implements AllegroServiceInterface
 	const BASIC_FILTERS = ['search', 'category', 'userId'];
 	const COUNTRY_FILTERS = ['price', 'condition', 'offerType', 'shippingTime', 'offerOptions'];
 
+	const BANNED_FILTERS = [
+		'11323' // strange behavior, something's messed up on Allegro part I guess
+	];
+
 	private $apiKey;
 	private $soap;
 	private $result; // stores last result from API call
@@ -166,6 +170,11 @@ class AllegroService implements AllegroServiceInterface
 	}
 
 
+	public function getBannedFilterIds(): array
+	{
+		return self::BANNED_FILTERS;
+	}
+
 
 
 	private function filterFilters(array $filters): array
@@ -176,6 +185,11 @@ class AllegroService implements AllegroServiceInterface
 				&& (!in_array($filter->filterId, self::BASIC_FILTERS)
 				&& !in_array($filter->filterId, self::COUNTRY_FILTERS))
 			) {
+				unset($filters[$key]);
+			}
+
+			// Filter banned filters
+			if (in_array($filter->filterId, self::BANNED_FILTERS)) {
 				unset($filters[$key]);
 			}
 		}

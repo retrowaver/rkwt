@@ -15,4 +15,6 @@ interface AllegroServiceInterface
 	public function getUsername(int $userId): string;
 
 	public function getFiltersInfo(?array $filters): array;
+
+	public function getBannedFilterIds(): array;
 }

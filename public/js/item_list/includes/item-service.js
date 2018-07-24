@@ -8,6 +8,7 @@ class ItemService
 
 	removeItem(itemId)
 	{
+		this._displayService.showLoader();
 		$.getJSON('/ajax/item/remove/' + itemId, {csrfToken: this._dataContainer.csrfToken}, $.proxy(function() {
 			this._displayService.removeItem(itemId);
 		}, this));

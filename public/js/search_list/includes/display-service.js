@@ -4,4 +4,14 @@ class DisplayService
 	{
 		$('#search-list').find('tr[data-search-id="' + searchId + '"]').fadeOut();
 	}
+
+	hideLoader()
+	{
+		$("#loading").hide();
+	}
+
+	showLoader()
+	{
+		$("#loading").show();
+	}
 }

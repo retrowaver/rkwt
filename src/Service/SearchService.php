@@ -93,6 +93,11 @@ class SearchService implements SearchServiceInterface
         if ($this->hasSearchUnexpectedFilterIds($search, $filtersInfo['available'])) {
             return self::ERROR_DEFAULT;
         }
+
+        //
+        if ($this->hasSearchBannedFilterIds($search)) {
+            return self::ERROR_DEFAULT;
+        }
         
         //
         if (strlen($search->getName()) > self::SEARCH_NAME_MAX_LENGTH) {
@@ -121,6 +126,14 @@ class SearchService implements SearchServiceInterface
         $filterIds = $search->getFiltersIds();
 
         return (count($filterIds) !== count(array_unique($filterIds)));
+    }
+
+    private function hasSearchBannedFilterIds(Search $search): bool
+    {
+        $filterIds = $search->getFiltersIds();
+        $bannedIds = $this->allegro->getBannedFilterIds();
+
+        return (count(array_diff($bannedIds, $filterIds)) < count($bannedIds));
     }
 
     private function preDenormalizeSearch(array $searchData): array
