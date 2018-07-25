@@ -1,15 +1,3 @@
-dataContainer.currentFilter = null;
-dataContainer.filterData = {
-	name: 'bez nazwy'
-};
-
-const templates = new Templates();
-const filterCollection = new FilterCollection();
-const displayService = new DisplayService(filterCollection, templates, dataContainer);
-const filterService = new FilterService(filterCollection, displayService, dataContainer);
-const searchService = new SearchService(filterCollection, filterService, displayService, dataContainer);
-
-
 $(".change-search-name").click(function() {
 	var searchName = dataContainer.filterData.name;
 
@@ -71,12 +59,12 @@ $(document).on("click", ".category-to-pick", function() {
 
 //
 $(".save-new-search").click(function() {
-	searchService.saveNewSearch();
+	searchService.saveSearch();
 });
 
 $(".save-edited-search").click(function() {
-	searchService.saveEditedSearch(
-		$("input[name='searchId']").val()
+	searchService.saveSearch(
+		dataContainer.filterData.id
 	);
 });
 

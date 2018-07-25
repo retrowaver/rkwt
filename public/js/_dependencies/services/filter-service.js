@@ -44,27 +44,19 @@ class FilterService
 
 	saveFilter(filterId, values)
 	{
-		//add filter to collection
-
-		//console.log(filterId);
-		//console.log(values);
-
+		// Add filter to the collection.
 		this._filterCollection.addValues(filterId, values);
 
-		//add filter to display
-
+		// Add filter to display.
 		this._displayService.addFilter(filterId);
-
-		//console.log(this._filterCollection);
 	}
 
 	removeFilter(filterId)
 	{
-		//remove filter from collection
+		// Remove filter from the collection.
 		this._filterCollection.removeValues(filterId);
 
-
-		//remove filter from display
+		// Remove filter from display.
 		this._displayService.removeFilter(filterId);
 	}
 
@@ -95,8 +87,6 @@ class FilterService
 		var meta = this._filterCollection.getMetaById(filterId);
 		var values = filterService.getValuesFromForm();
 
-		//console.log(meta);
-
 		switch (meta.filterControlType) {
 			case 'checkbox':
 				return this._validateCheckboxFilter(values);
@@ -116,7 +106,7 @@ class FilterService
 
 	_validateTextboxFilter(values, meta)
 	{
-		// Check if 1/1 or 2/2 fields are empty
+		// Check if 1 out of 1 or 2 out of 2 fields are empty
 		if (values.join() === '') {
 			return false;
 		}
@@ -131,13 +121,16 @@ class FilterService
 			return false;
 		}
 
-		//
+		// Do the same checks for both fields (or just one, if there's only one)
 		for (var i = 0; i < 2; i++) {
 			// Checks based on filterId
 			// (exceptions made for most frequently used fields)
 			switch (meta.filterId) {
 				case 'price':
-					return (validator.isDecimal(values[i], {locale: 'pl-PL', decimal_digits: '0,2'}) && validator.isFloat(values[i], {locale: 'pl-PL', min: 0}));
+					return (
+						validator.isDecimal(values[i], {locale: 'pl-PL', decimal_digits: '0,2'})
+						&& validator.isFloat(values[i], {locale: 'pl-PL', min: 0})
+					);
 					break;
 			}
 

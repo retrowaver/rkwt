@@ -54,18 +54,19 @@
 {% endblock %}
 
 {% block javascripts %}
-	
 	{% include 'search/handlebars_includes.html.twig' %}
-	<script src="/js/handlebars-v4.0.11.js"></script>
-	<script src="/js/search_add_edit/includes/display-service.js"></script>
-	<script src="/js/search_add_edit/includes/filter-service.js"></script>
-	<script src="/js/search_add_edit/includes/search-service.js"></script>
-	<script src="/js/search_add_edit/includes/filter-collection.js"></script>
-	<script src="/js/search_add_edit/includes/templates.js"></script>
-	<script src="/js/search_add_edit/functions.js"></script>
-	<script src="/js/search_add_edit/search-edit.js"></script>
+	<script src="/js/_external-dependencies/handlebars-v4.0.11.js"></script>
+	<script src="/js/_external-dependencies/validator.min.js"></script>
 
-	<script src="/js/external/validator.min.js"></script>
+	<script src="/js/_dependencies/other/templates-container.js"></script>
+	<script src="/js/_dependencies/other/filter-collection.js"></script>
+	<script src="/js/_dependencies/display-services/search-display-service.js"></script>
+	<script src="/js/_dependencies/services/filter-service.js"></script>
+	<script src="/js/_dependencies/services/search-service.js"></script>
+	
+	<script src="/js/search-add-edit/_dependencies.js"></script>
+	<script src="/js/search-add-edit/_functions.js"></script>
+	<script src="/js/search-add-edit/_initial.js"></script>
 
 	
 	

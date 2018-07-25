@@ -1,4 +1,4 @@
-class Templates
+class TemplatesContainer
 {
 	constructor()
 	{

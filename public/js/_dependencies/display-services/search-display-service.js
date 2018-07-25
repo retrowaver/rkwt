@@ -1,4 +1,4 @@
-class DisplayService
+class SearchDisplayService
 {
 	constructor(filterCollection, templates, dataContainer)
 	{
@@ -20,32 +20,24 @@ class DisplayService
 		$("#new-search-modal").find(".modal-body").html(modalBody);
 		$("#new-search-modal").find(".save-filter").data('filterId', meta.filterId); // button
 
-		//
+		// If we are editing, then display previously saved values
+		// (checked checkboxes, filled inputs, etc.).
 		if (edit) {
 			var values = this._filterCollection.getValues(meta.filterId);
-			//console.log(values);
 			this._alterModalWithExistingValues(meta, values);
 
-
-			//////////
-			// Assumption that ...
+			// Assumes that correctness of data didn't change since last save.
 			this.enableSaveButton();
-			//////////
 		} else {
 			this.disableSaveButton();
 		}
 
-
-
-
-		//special stuff for special types of filters
+		// Special stuff for special types of filters.
 		if (meta.filterId === 'category') {
 			this.updateCategoryPickerTree();
 		}
 
-
-
-		//
+		// Final step - display modal
 		$("#new-search-modal").modal('show');
 	}
 
@@ -78,13 +70,13 @@ class DisplayService
 
 	addFilter(filterId)
 	{
+		// Insert data into template.
 		var filter = this._templates.filterDisplay({
 			'meta': this._filterCollection.getMetaByIds([filterId])[0],
 			'values': this._filterCollection.getValues(filterId),
 		});
 
-		//console.log(filterId);
-
+		// Display (as new or replace an existing one).
 		if (!$("#filters").find('#filter-row-' + filterId).length) {
 			$("#filters").append(filter);
 		} else {
@@ -183,11 +175,6 @@ class DisplayService
 	{
 		var values = this._filterCollection.getValues(filterId);
 		var meta = this._filterCollection.getMetaById(filterId);
-		
-		//
-		/*switch (meta.filterId) {
-			case
-		}*/
 
 		switch (meta.filterControlType) {
 			case 'checkbox':
@@ -234,7 +221,7 @@ class DisplayService
 
 	_getModalBody(meta)
 	{
-		// Special forms
+		// Special forms.
 		switch (meta.filterId) {
 			case 'category':
 				return this._templates.newSearchCategory(meta);
@@ -244,7 +231,7 @@ class DisplayService
 				break;
 		}
 
-		// Standard forms
+		// Standard forms.
 		switch (meta.filterControlType) {
 			case 'combobox':
 				return this._templates.newSearchCombobox(meta);
@@ -260,7 +247,7 @@ class DisplayService
 
 	_alterModalWithExistingValues(meta, values)
 	{
-		// Special forms
+		// Special forms.
 		switch (meta.filterId) {
 			case 'category':
 				this._alterCategoryModalWithExistingValues(meta, values);
@@ -272,7 +259,7 @@ class DisplayService
 				break;
 		}
 
-		// Standard forms
+		// Standard forms.
 		switch (meta.filterControlType) {
 			case 'checkbox':
 				this._alterCheckboxModalWithExistingValues(meta, values);
@@ -291,7 +278,7 @@ class DisplayService
 		var userId = values.filterValueId[0];
 		$("input[name='new-filter-value[]']").val(userId);
 
-		//
+		// Username isn't stored in db, therefore has to be requested.
 		$.getJSON('/ajax/allegro/username', {userId: userId, csrfToken: this._dataContainer.csrfToken}, $.proxy(function(data) {
 			$("#user-id-picker-username").val(data.username);
 		}, this));

@@ -4,10 +4,9 @@ class FilterCollection
 	{
 		this._meta = {};
 		this._values = {};
-		//this._descriptions = {};
 	}
 
-	// Exports saved filter values in API compatible format
+	// Exports saved filter values in Allegro WebAPI compatible format.
 	getFiltersForApi()
 	{
 		var filters = [];
@@ -20,47 +19,13 @@ class FilterCollection
 		return filters;
 	}
 
-	/*getFiltersForPhp()
-	{
-		var filtersForApiRequest = [];
-
-		$.each(this._values, $.proxy(function(filterId, values){
-			var meta = this.getMetaByParameter('filterId', filterId)[0];
-			//console.log(meta);
-
-			var filter = {'filterId': filterId};
-
-			if (!meta.filterIsRange) {
-				filter.filterValues = [];
-				$.each(values, function(key, value){
-					filter.filterValues.push(
-						{'filterValue': value}
-					);
-				});
-
-			} else {
-				if (values[0] !== '') {
-					filter.valueRangeMin = values[0];
-				}
-
-				if (values[1] !== '') {
-					filter.valueRangeMax = values[1];
-				}
-			}
-
-			filtersForApiRequest.push(filter);
-		}, this));
-
-		return filtersForApiRequest;
-		//console.log(filtersForApiRequest);
-	}*/
-
-	// Add values to collection
+	// Add values to the collection.
 	addValues(filterId, values)
 	{
 		var isRange = this.getMetaById(filterId).filterIsRange;
 		var current = {};
 
+		// Mapping.
 		if (!isRange) {
 			current.filterValueId = values;
 		} else {
@@ -77,7 +42,6 @@ class FilterCollection
 		this._values[filterId] = current;
 	}
 
-	// 
 	setMeta(filters)
 	{
 		this._meta = {};
@@ -93,11 +57,6 @@ class FilterCollection
 			this._values[filter.filterId] = filter;
 		}, this));
 	}
-
-	/*getMeta()
-	{
-		return this._meta;
-	}*/
 
 	getMetaByParameter(parameter, value)
 	{
@@ -119,13 +78,8 @@ class FilterCollection
 
 	getMetaByIds(ids)
 	{
-		//???????????????????????
-
-		//idsy zachowuja kolejnosc
+		// Order of returned meta info matches the order of provided ids.
 		var meta = [];
-
-		//console.log(ids);
-		//console.log(this._meta);
 
 		$.each(this._meta, function(i, filter){
 			var index = ids.indexOf(filter.filterId);

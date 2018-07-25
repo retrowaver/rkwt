@@ -1,6 +1,3 @@
-const displayService = new DisplayService();
-const searchService = new SearchService(displayService, dataContainer);
-
 $(".remove-search").click(function() {
 	var searchId = $(this).data("search-id");
 
@@ -12,9 +9,8 @@ $(".remove-search").click(function() {
 	            text: 'Usuń',
 	            btnClass: 'btn-danger',
 	            keys: ['enter'],
-	            //action: searchService.removeSearch(searchId)
 	            action: function(){
-	            	searchService.removeSearch(searchId)
+	            	searchListService.removeSearch(searchId)
 	            }
 	        },
 	        cancel: {

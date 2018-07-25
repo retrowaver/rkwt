@@ -1,4 +1,4 @@
-class SearchService
+class SearchListService
 {
 	constructor(displayService, dataContainer)
 	{
