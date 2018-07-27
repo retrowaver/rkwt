@@ -1,12 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block meta_title %}Logowanie{% endblock %}
-{% block title %}Logowanie{% endblock %}
+{% block meta_title %}
+	{% trans %}page-title.security.login{% endtrans %}
+{% endblock %}
+{% block title %}
+	{% trans %}page-title.security.login{% endtrans %}
+{% endblock %}
 
 {% block body %}
     {{ form_start(form) }}
-        {{ form_row(form._username, { 'label': 'Nazwa użytkownika' }) }}
-        {{ form_row(form._password, { 'label': 'Hasło' }) }}
-        {{ form_row(form.submit, { 'label': 'Zaloguj' }) }}
+        {{ form_row(form._username, { 'label': 'label.username' }) }}
+        {{ form_row(form._password, { 'label': 'label.password' }) }}
+        {{ form_row(form.submit, { 'label': 'label.log-in' }) }}
     {{ form_end(form) }}
 {% endblock %}

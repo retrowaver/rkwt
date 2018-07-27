@@ -1,8 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block meta_title %}Twoje wyszukiwania{% endblock %}
+{% block meta_title %}
+	{% trans %}page-title.search.list{% endtrans %}
+{% endblock %}
 {% block title %}
-	Twoje wyszukiwania
+	{% trans %}page-title.search.list{% endtrans %}
 	<a href="{{ path("search_new") }}" class="btn btn-outline-info">
 		<i class="fas fa-plus"></i> Utwórz
 	</a>
@@ -12,8 +14,8 @@
     <table class="table table-hover" id="search-list">
 	   <thead class="thead">
 	    <tr>
-	      <th scope="col">Nazwa wyszukiwania</th>
-	      <th scope="col">Akcje</th>
+	      <th scope="col">{% trans %}label.search-name{% endtrans %}</th>
+	      <th scope="col">{% trans %}label.actions{% endtrans %}</th>
 	    </tr>
 	  </thead>
 	  <tbody>
@@ -23,8 +25,12 @@
 			<tr data-search-id="{{ search.id }}">
 				<td>{{ search.name }}</td>
 				<td>
-					<a class="btn btn-info" href="{{ path("search_edit", {id: search.id}) }}"><i class="far fa-edit"></i> Edytuj</a>
-					<button type="button" data-search-id="{{ search.id }}" class="btn btn-danger remove-search"><i class="fas fa-times"></i> Usuń</button>
+					<a class="btn btn-info" href="{{ path("search_edit", {id: search.id}) }}">
+						<i class="far fa-edit"></i> {% trans %}label.edit{% endtrans %}
+					</a>
+					<button type="button" data-search-id="{{ search.id }}" class="btn btn-danger remove-search">
+						<i class="fas fa-times"></i> {% trans %}label.delete{% endtrans %}
+					</button>
 				</td>
 			</tr>
 

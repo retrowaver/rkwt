@@ -84,28 +84,13 @@ $(".save-filter").click(function() {
 
 	var values = filterService.getValuesFromForm();
 
-	//console.log(values);
-
-	//console.log(values);
-
-
-	////////////////////////////////??DOPISAC SPRAWDZANIE, CZY FILTR O DANYM ID JUZ NIE ISTNIEJE <- to chyba nie ma sensu, lepiej nie wyswietlac takiego filtra na liscie
-	/////////????ALSO DOPISAC SPRAWDZANIE, CZY WARTOSC / JEDNA Z WARTOSCI NIE JEST PUSTA
-
-
-	//console.log(filterId);
-	//console.log(values);
-
-
-	//if (filterService.validateFilter(filterId)) {
 	filterService.saveFilter(filterId, values);
-	displayService.updateDescription(filterId);
 
 
 
 
 	//// THIS SHOULD BE DONE ONLY FOR A NUMBER OF FILTERS
-	filterService.updateMeta();
+	filterService.updateFilters();
 	/////
 
 	$('#new-search-modal').modal('hide');
@@ -133,7 +118,7 @@ $('#filters').on('click', '.remove-filter', function(){
     filterService.removeFilter(filterId);
 
     //// THIS SHOULD BE DONE ONLY FOR A NUMBER OF FILTERS
-	filterService.updateMeta();
+	filterService.updateFilters();
 	/////
 }); 
 

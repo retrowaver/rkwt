@@ -2,9 +2,23 @@
 	"@metadata": {
 		"locale": "pl"
 	},
-	"appname-title": "Example Application",
-	"appname-sub-title": "An example application with jquery.i18n",
-	"appname-header-introduction": "Introduction",
-	"appname-about": "About this application",
-	"appname-footer": "Footer text"
+
+	"message-chosen-category": "Wybrana kategoria: $1",
+	"message-missing-basic-filter": "Najpierw dodaj filtr podstawowy",
+	"message-missing-category-filter": "Najpierw doprecyzuj kategorię",
+
+	"label-error": "Błąd",
+	"label-min-value": "Od",
+	"label-max-value": "Do",
+	"label-min-value-x": "od $1",
+	"label-max-value-x": "do $1",
+	"label-basic-filters": "Filtry podstawowe",
+	"label-country-filters": "Filtry rozszerzone",
+	"label-category-filters": "Filtry kategorii",
+	"label-edit": "Edytuj",
+	"label-delete": "Usuń",
+	"label-select-choose": "-- Wybierz --",
+	"label-go-back": "wstecz",
+
+	"default-search-name": "bez nazwy"
 }

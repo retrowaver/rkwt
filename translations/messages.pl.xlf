@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="label.email">
+                <source>label.email</source>
+                <target>Adres e-mail</target>
+            </trans-unit>
+            <trans-unit id="label.change-password">
+                <source>label.change-password</source>
+                <target>Zmień hasło</target>
+            </trans-unit>
+            <trans-unit id="label.repeat-password">
+                <source>label.repeat-password</source>
+                <target>Powtórz hasło</target>
+            </trans-unit>
+
+            <trans-unit id="label.item-title">
+                <source>label.item-title</source>
+                <target>Tytuł aukcji</target>
+            </trans-unit>
+            <trans-unit id="label.item-price">
+                <source>label.item-price</source>
+                <target>Cena</target>
+            </trans-unit>
+            <trans-unit id="label.item-time-found">
+                <source>label.item-time-found</source>
+                <target>Czas znalezienia</target>
+            </trans-unit>
+            <trans-unit id="label.actions">
+                <source>label.actions</source>
+                <target>Akcje</target>
+            </trans-unit>
+            <trans-unit id="label.today">
+                <source>label.today</source>
+                <target>Dzisiaj</target>
+            </trans-unit>
+            <trans-unit id="label.yesterday">
+                <source>label.yesterday</source>
+                <target>Wczoraj</target>
+            </trans-unit>
+            <trans-unit id="label.delete">
+                <source>label.delete</source>
+                <target>Usuń</target>
+            </trans-unit>
+            <trans-unit id="label.close">
+                <source>label.close</source>
+                <target>Zamknij</target>
+            </trans-unit>
+            <trans-unit id="label.cancel">
+                <source>label.cancel</source>
+                <target>Anuluj</target>
+            </trans-unit>
+            <trans-unit id="label.proceed">
+                <source>label.proceed</source>
+                <target>Dalej</target>
+            </trans-unit>
+            <trans-unit id="label.filters">
+                <source>label.filters</source>
+                <target>Filtry</target>
+            </trans-unit>
+            <trans-unit id="label.add-filter">
+                <source>label.add-filter</source>
+                <target>Dodaj filtr</target>
+            </trans-unit>
+            <trans-unit id="label.save-search">
+                <source>label.save-search</source>
+                <target>Zapisz wyszukiwanie</target>
+            </trans-unit>
+            <trans-unit id="label.save-search-as-new">
+                <source>label.save-search-as-new</source>
+                <target>Zapisz jako nowe</target>
+            </trans-unit>
+            <trans-unit id="label.search-name">
+                <source>label.search-name</source>
+                <target>Nazwa wyszukiwania</target>
+            </trans-unit>
+            <trans-unit id="label.edit">
+                <source>label.edit</source>
+                <target>Edytuj</target>
+            </trans-unit>
+            <trans-unit id="label.username">
+                <source>label.username</source>
+                <target>Nazwa użytkownika</target>
+            </trans-unit>
+            <trans-unit id="label.password">
+                <source>label.password</source>
+                <target>Hasło</target>
+            </trans-unit>
+            <trans-unit id="label.log-in">
+                <source>label.log-in</source>
+                <target>Zaloguj</target>
+            </trans-unit>
+
+
+            <trans-unit id="message.choose-filter-type">
+                <source>message.choose-filter-type</source>
+                <target>Wybierz rodzaj filtra</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="label.save">
+                <source>label.save</source>
+                <target>Zapisz</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="page-title.user.settings">
+                <source>page-title.user.settings</source>
+                <target>Ustawienia</target>
+            </trans-unit>
+            <trans-unit id="page-title.item.list">
+                <source>page-title.item.list</source>
+                <target>Lista przedmiotów</target>
+            </trans-unit>
+            <trans-unit id="page-title.search.edit">
+                <source>page-title.search.edit</source>
+                <target>Edycja wyszukiwania</target>
+            </trans-unit>
+            <trans-unit id="page-title.search.new">
+                <source>page-title.search.new</source>
+                <target>Nowe wyszukiwanie</target>
+            </trans-unit>
+            <trans-unit id="page-title.search.list">
+                <source>page-title.search.list</source>
+                <target>Twoje wyszukiwania</target>
+            </trans-unit>
+            <trans-unit id="page-title.security.login">
+                <source>page-title.security.login</source>
+                <target>Logowanie</target>
+            </trans-unit>
+
+            <trans-unit id="page-navbar-title.item.list">
+                <source>page-navbar-title.item.list</source>
+                <target>Przedmioty</target>
+            </trans-unit>
+            <trans-unit id="page-navbar-title.search.list">
+                <source>page-navbar-title.search.list</source>
+                <target>Wyszukiwania</target>
+            </trans-unit>
+            <trans-unit id="page-navbar-title.search.list.list">
+                <source>page-navbar-title.search.list.list</source>
+                <target>Lista</target>
+            </trans-unit>
+            <trans-unit id="page-navbar-title.search.list.new">
+                <source>page-navbar-title.search.list.new</source>
+                <target>Dodaj nowe</target>
+            </trans-unit>
+            <trans-unit id="page-navbar-title.user.settings">
+                <source>page-navbar-title.user.settings</source>
+                <target>Ustawienia</target>
+            </trans-unit>
+            <trans-unit id="page-navbar-title.logout">
+                <source>page-navbar-title.logout</source>
+                <target>Wyloguj</target>
+            </trans-unit>
+
+
+
+
+            <trans-unit id="default.search-name">
+                <source>default.search-name</source>
+                <target>bez nazwy</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

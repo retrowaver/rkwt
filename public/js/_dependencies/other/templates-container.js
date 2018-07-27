@@ -2,6 +2,12 @@ class TemplatesContainer
 {
 	constructor()
 	{
+		Handlebars.registerHelper('trans',
+			function(str){
+				return $.i18n(str.fn(this));
+			}
+		);
+
 		this.searchSelect = Handlebars.compile($("#search-select-template").html());
 		this.newSearchCombobox = Handlebars.compile($("#new-search-combobox-template").html());
 		this.newSearchCheckbox = Handlebars.compile($("#new-search-checkbox-template").html());
@@ -15,7 +21,5 @@ class TemplatesContainer
 		//this.newSearchTextboxDatetime = Handlebars.compile($("#new-search-textbox-datetime-template").html());
 
 		this.filterDisplay = Handlebars.compile($("#filter-display-template").html());
-
-		this.filterDescriptionBadges = Handlebars.compile($("#filter-description-badge-template").html());
 	}
 }

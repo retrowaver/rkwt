@@ -1,14 +1,14 @@
 var initial = function() {
 	dataContainer.currentFilter = null;
 	dataContainer.filterData = {
-		name: 'bez nazwy'
+		name: $.i18n('default-search-name')
 	};
 
 
 	var searchId = $("input[name='searchId']").val();
 	if (typeof(searchId) === 'undefined') {
 		/////// if new:
-		filterService.updateMeta();
+		filterService.updateFilters();
 	} else {
 		/////// if edit:
 		searchService.loadSearch(searchId);

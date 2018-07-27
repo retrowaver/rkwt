@@ -3,14 +3,17 @@ dataContainer.csrfToken = $("input[name='csrf-token']").val();
 
 // Set & load language plugin
 $.i18n({
-	locale: 'pl'
+	locale: dataContainer.locale
 });
 
 $.i18n().load({
-	'pl': 'js/translation/pl.json'
+	'pl': '/js/_translations/pl.json',
+	'en': '/js/_translations/en.json'
 }).done(function() {
 	// Do some initial work if needed, e.g. load some stuff through AJAX
 	if (typeof(initial) !== 'undefined') {
 		initial();
 	}
+
+	//console.log($.i18n('test'));
 });

@@ -23,7 +23,7 @@ class SearchDisplayService
 		// If we are editing, then display previously saved values
 		// (checked checkboxes, filled inputs, etc.).
 		if (edit) {
-			var values = this._filterCollection.getValues(meta.filterId);
+			var values = this._filterCollection.getValuesForDisplay(meta.filterId);
 			this._alterModalWithExistingValues(meta, values);
 
 			// Assumes that correctness of data didn't change since last save.
@@ -73,7 +73,8 @@ class SearchDisplayService
 		// Insert data into template.
 		var filter = this._templates.filterDisplay({
 			'meta': this._filterCollection.getMetaByIds([filterId])[0],
-			'values': this._filterCollection.getValues(filterId),
+			'values': this._filterCollection.getValuesForDisplay(filterId),
+			'descriptions': this._getDescription(filterId),
 		});
 
 		// Display (as new or replace an existing one).
@@ -92,7 +93,8 @@ class SearchDisplayService
 	displayError(errorMessage)
 	{
 	    $.alert({
-	        title: 'Błąd',
+	        //title: 'Błąd',
+	        title: $.i18n('label-error'),
 	        content: errorMessage,
 	    });
 	}
@@ -130,11 +132,11 @@ class SearchDisplayService
 				this._templates.newSearchCategoryPickerList(data)
 			);
 
-			//
-			//if (data.parentCategory !== null && data.parentCategory.catIsLeaf) {
 			if (data.parentCategory !== null) {
 				this.enableSaveButton();
-				$(".chosen-category-info").html('Wybrana kategoria: ' + data.parentCategory.catName);
+				$(".chosen-category-info").html(
+					$.i18n('message-chosen-category', data.parentCategory.catName)
+				);
 			} else {
 				this.disableSaveButton();
 				$(".chosen-category-info").html();
@@ -152,28 +154,9 @@ class SearchDisplayService
 		$(".save-filter").attr("disabled", false);
 	}
 
-	updateDescriptions()
-	{
-		var filterIds = this._filterCollection.getFiltersIds();
-		$.each(filterIds, $.proxy(function(i, filterId){
-			this.updateDescription(filterId);
-		}, this));
-	}
-
-	updateDescription(filterId)
-	{
-		$("#filter-row-" + filterId).find(".filter-value-description").html(
-			this._templates.filterDescriptionBadges(
-				{
-					badges: this._getDescription(filterId)
-				}
-			)
-		);
-	}
-
 	_getDescription(filterId)
 	{
-		var values = this._filterCollection.getValues(filterId);
+		var values = this._filterCollection.getValuesForDisplay(filterId);
 		var meta = this._filterCollection.getMetaById(filterId);
 
 		switch (meta.filterControlType) {
@@ -198,7 +181,7 @@ class SearchDisplayService
 
 	_getDescriptionForCombobox(values, meta)
 	{
-		return [''];
+		return ['...'];
 	}
 
 	_getDescriptionForTextbox(values, meta)
@@ -207,10 +190,16 @@ class SearchDisplayService
 		var content = [];
 		if (meta.filterIsRange) {
 			if (values.filterValueRange.rangeValueMin) {
-				content.push('od ' + values.filterValueRange.rangeValueMin);
+				//content.push('od ' + values.filterValueRange.rangeValueMin);
+				content.push(
+					$.i18n('label-min-value-x', values.filterValueRange.rangeValueMin)
+				);
 			}
 			if (values.filterValueRange.rangeValueMax) {
-				content.push('do ' + values.filterValueRange.rangeValueMax);
+				//content.push('do ' + values.filterValueRange.rangeValueMax);
+				content.push(
+					$.i18n('label-max-value-x', values.filterValueRange.rangeValueMax)
+				);
 			}
 		} else {
 			content.push(values.filterValueId[0]);

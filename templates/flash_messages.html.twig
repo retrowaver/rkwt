@@ -1,7 +1,7 @@
 {% for message in app.flashes('notice') %}
 	<div class="alert alert-info alert-dismissible fade show" role="alert">
 		{{ message }}
-		<button type="button" class="close" data-dismiss="alert" aria-label="Zamknij">
+		<button type="button" class="close" data-dismiss="alert" aria-label="{% trans %}label.close{% endtrans %}">
 			<span aria-hidden="true">&times;</span>
 		</button>
 	</div>
@@ -10,7 +10,7 @@
 {% for message in app.flashes('error') %}
 	<div class="alert alert-danger alert-dismissible fade show" role="alert">
 		{{ message }}
-		<button type="button" class="close" data-dismiss="alert" aria-label="Zamknij">
+		<button type="button" class="close" data-dismiss="alert" aria-label="{% trans %}label.close{% endtrans %}">
 			<span aria-hidden="true">&times;</span>
 		</button>
 	</div>

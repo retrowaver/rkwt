@@ -5,16 +5,19 @@ class FilterService
 		this._filterCollection = filterCollection;
 		this._displayService = displayService;
 		this._dataContainer = dataContainer;
+
+		this._BASIC_FILTERS_IDS = ['category', 'userId', 'search'];
 	}
 
-	//not just meta
-	updateMeta(edit = false)
+	// Updates filters: 
+	updateFilters(edit = false)
 	{
-		var basicFilters = ['category', 'userId', 'search']; //this should be moved somewhere
+		// Check if there's at least one basic filter present. If there isn't,
+		// then remove all remaining filters (because all more sophisticated
+		// filters need one of the basic filters - otherwise search will be
+		// invalid)
 		var currentIds = this._filterCollection.getFiltersIds();
-
-		//
-		if (basicFilters.filter(x => -1 !== currentIds.indexOf(x)).length) {
+		if (this._BASIC_FILTERS_IDS.filter(x => currentIds.indexOf(x) !== -1).length > 0) {
 			var currentFilters = this._filterCollection.getFiltersForApi();
 		} else {
 			var currentFilters = [];
@@ -23,22 +26,31 @@ class FilterService
 			}, this));
 		}
 
+		// Request available filters (passing current filters - if there are any)
+		// https://allegro.pl/webapi/tutorials.php/tutorial/id,281
+		// https://allegro.pl/webapi/documentation.php/show/id,1342
 		$.getJSON('/ajax/allegro/filters', {"currentFilters": currentFilters, csrfToken: this._dataContainer.csrfToken}, $.proxy(function(filters) {
-			// Save received filters
+			// Save received meta information about filters (type, control type, etc.)
 			this._filterCollection.setMeta(filters.available);
 
-			// Update displayed filters picker (so it will show updated filters)
+			// Update filters picker, so it will show updated filters (based on saved meta info)
 			this._displayService.updateFiltersPicker();
 
+			// Based on updated filters info, remove filters which aren't relevant anymore.
+			//
+			// Example: user had chosen 2 filters:
+			// - category: PC parts -> CPUs
+			// - amount of cores: 4
+			// ... and then changed the category to just "PC parts", making the second filter irrevelant
 			this._removeIncompatibleFilters();
 
-
+			// If user is creating a new search, filters and their descriptions
+			// are displayed once they're added. In case of editing an existing
+			// search, they have to be displayed / generated all at once in the beginning
 			if (edit) {
 				this._displayService.displayFilters();
-				this._displayService.updateDescriptions();
+				//this._displayService.updateDescriptions();
 			}
-
-			//LOADER END
 		}, this));
 	}
 

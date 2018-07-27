@@ -1,18 +1,22 @@
 {% extends 'base.html.twig' %}
 
-{% block meta_title %}Ustawienia{% endblock %}
-{% block title %}Ustawienia{% endblock %}
+{% block meta_title %}
+	{% trans %}page-title.user.settings{% endtrans %}
+{% endblock %}
+{% block title %}
+	{% trans %}page-title.user.settings{% endtrans %}
+{% endblock %}
 
 {% block body %}
 	<div class="card bg-light">
 		<div class="card-body">
 		    {{ form_start(form) }}
 			    {{ form_errors(form) }}
-			    {{ form_row(form.email, { 'label': 'Adres e-mail' }) }}
+			    {{ form_row(form.email, { 'label': 'label.email' }) }}
 			    <hr>
-			    {{ form_row(form.plainPassword.first, { 'label': 'Zmień hasło' }) }}
-			    {{ form_row(form.plainPassword.second, { 'label': 'Powtórz hasło' }) }}
-			    {{ form_row(form.submit, { 'label': 'Zapisz' }) }}
+			    {{ form_row(form.plainPassword.first, { 'label': 'label.change-password' }) }}
+			    {{ form_row(form.plainPassword.second, { 'label': 'label.repeat-password' }) }}
+			    {{ form_row(form.submit, { 'label': 'label.save' }) }}
 			{{ form_end(form) }}
 		</div>
 	</div>

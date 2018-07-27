@@ -1,7 +1,9 @@
 class FilterCollection
 {
-	constructor()
+	constructor(dataContainer)
 	{
+		this._dataContainer = dataContainer;
+
 		this._meta = {};
 		this._values = {};
 	}
@@ -22,11 +24,19 @@ class FilterCollection
 	// Add values to the collection.
 	addValues(filterId, values)
 	{
-		var isRange = this.getMetaById(filterId).filterIsRange;
-		var current = {};
+		var meta = this.getMetaById(filterId);
 
-		// Mapping.
-		if (!isRange) {
+		//
+		if (this._dataContainer.locale === 'pl') {
+			if (meta.filterDataType === 'float') {
+				values = $.extend(true, {}, values);
+				this._replace(",", ".", values);
+			}
+		}
+
+		// Mapping
+		var current = {};
+		if (!meta.filterIsRange) {
 			current.filterValueId = values;
 		} else {
 			current.filterValueRange = {};
@@ -39,7 +49,11 @@ class FilterCollection
 			}
 		}
 
+		//console.log(current);
+
 		this._values[filterId] = current;
+
+		//console.log(this._values);
 	}
 
 	setMeta(filters)
@@ -101,13 +115,47 @@ class FilterCollection
 		return Object.keys(this._meta);
 	}
 
+	/*
+	// currently unused
 	getValues(filterId)
 	{
 		return this._values[filterId];
+	}*/
+
+	getValuesForDisplay(filterId)
+	{
+		var meta = this._meta[filterId];
+		var values = this._values[filterId];
+
+		if (this._dataContainer.locale === 'pl') {
+			if (meta.filterDataType === 'float') {
+				values = $.extend(true, {}, this._values[filterId]);
+				this._replace("\\.", ",", values);
+			}
+		}
+		
+		return values;
 	}
 
 	removeValues(filterId)
 	{
 		delete this._values[filterId];
+	}
+
+	_replace(search, replace, obj)
+	{
+		// this should be rewritten
+		search = new RegExp(search);
+		$.each(obj, function(i, value){
+			if (typeof(value) === 'string') {
+				obj[i] = value.replace(search, replace);
+			} else if (typeof(value) === 'object' || Array.isArray(value)) {
+				$.each(value, function(j, value2){
+					if (typeof(value2) === 'string') {
+						obj[i][j] = value2.replace(search, replace);
+					}
+				});
+			}
+		});
 	}
 }

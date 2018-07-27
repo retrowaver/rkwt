@@ -1,0 +1,24 @@
+{
+	"@metadata": {
+		"locale": "en"
+	},
+
+	"message-chosen-category": "Chosen category: $1",
+	"message-missing-basic-filter": "First, add a basic filter",
+	"message-missing-category-filter": "First, choose a category",
+
+	"label-error": "Error",
+	"label-min-value": "Min",
+	"label-max-value": "Max",
+	"label-min-value-x": "min $1",
+	"label-max-value-x": "max $1",
+	"label-basic-filters": "Basic filters",
+	"label-country-filters": "Extended filters",
+	"label-category-filters": "Category filters",
+	"label-edit": "Edit",
+	"label-delete": "Delete",
+	"label-select-choose": "-- Choose --",
+	"label-go-back": "go back",
+
+	"default-search-name": "untitled"
+}

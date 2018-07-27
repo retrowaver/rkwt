@@ -1,8 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block meta_title %}Edycja wyszukiwania{% endblock %}
+{% block meta_title %}
+	{% trans %}page-title.search.edit{% endtrans %}
+{% endblock %}
 {% block title %}
-    	Edycja wyszukiwania:
+    	{% trans %}page-title.search.edit{% endtrans %}:
    		<input class="change-search-name-input" type="text" value="" style="display: none;" />
    		<span class="change-search-name">
    			<span class="search-name">{{ searchName }}</span>
@@ -14,30 +16,30 @@
 	<div class="card bg-light" id="filters-card">
 		<div class="card-body">
 			<h3>
-				<strong>Filtry </strong>
+				<strong>{% trans %}label.filters{% endtrans %} </strong>
 				<button type="button" class="btn btn-outline-info show-filter-picker">
-					    	<i class="fas fa-plus"></i> Dodaj filtr
+					    	<i class="fas fa-plus"></i> {% trans %}label.add-filter{% endtrans %}
 				</button>
 			</h3>
 
 
 			    <div id="filters">
 
-   				 </div>
+   				</div>
 		</div>
 	</div>
 
 	<div>
 	    <button type="button" class="btn btn-info btn-lg save-edited-search">
-	    	<i class="fas fa-save"></i> Zapisz wyszukiwanie
+	    	<i class="fas fa-save"></i> {% trans %}label.save-search{% endtrans %}
 	    </button>
 
 	    <button type="button" class="btn btn-info btn-lg save-new-search">
-	    	<i class="fas fa-certificate"></i> Zapisz jako nowe
+	    	<i class="fas fa-certificate"></i> {% trans %}label.save-search-as-new{% endtrans %}
 	    </button>
 
 	    <a class="btn btn-info btn-lg" href="{{ path("search_list") }}">
-	    	<i class="fas fa-ban"></i> Anuluj
+	    	<i class="fas fa-ban"></i> {% trans %}label.cancel{% endtrans %}
 	    </a>
 	</div>
 

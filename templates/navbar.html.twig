@@ -4,31 +4,38 @@
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mobile-nav">
 			<span class="navbar-toggle-icon"></span>
 		</button>
-
 		<div class="collapse navbar-collapse" id="mobile-nav">
 			<ul class="navbar-nav ml-auto">
                 {% if app.user %}
                     <li class="nav-item">
-                        <a href="{{ path("item_list") }}" class="nav-link{% if app.request.attributes.get('_route') starts with 'item' %} active{% endif %}"><i class="fas fa-th-list"></i> Przedmioty</a>
+                        <a href="{{ path("item_list") }}" class="nav-link{% if app.request.attributes.get('_route') starts with 'item' %} active{% endif %}"><i class="fas fa-th-list"></i> {% trans %}page-navbar-title.item.list{% endtrans %}</a>
                     </li>
 
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle{% if app.request.attributes.get('_route') starts with 'search' %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          <i class="fas fa-search"></i> Wyszukiwania
+                          <i class="fas fa-search"></i> {% trans %}page-navbar-title.search.list{% endtrans %}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                          <a class="dropdown-item" href="{{ path("search_list") }}">Lista</a>
+                          <a class="dropdown-item" href="{{ path("search_list") }}">
+                            {% trans %}page-navbar-title.search.list.list{% endtrans %}
+                          </a>
                           <div class="dropdown-divider"></div>
-                          <a class="dropdown-item" href="{{ path("search_new") }}">Dodaj nowe</a>
+                          <a class="dropdown-item" href="{{ path("search_new") }}">
+                            {% trans %}page-navbar-title.search.list.new{% endtrans %}
+                          </a>
                         </div>
                     </li>
 
                     <li class="nav-item">
-                        <a href="{{ path("user_settings") }}" class="nav-link{% if app.request.attributes.get('_route') starts with 'user' %} active{% endif %}"><i class="fas fa-cogs"></i> Ustawienia</a>
+                        <a href="{{ path("user_settings") }}" class="nav-link{% if app.request.attributes.get('_route') starts with 'user' %} active{% endif %}">
+                            <i class="fas fa-cogs"></i> {% trans %}page-navbar-title.user.settings{% endtrans %}
+                        </a>
                     </li>
 
                     <li class="nav-item">
-                        <a href="{{ logout_url() }}" class="nav-link"><i class="fas fa-sign-out-alt"></i> Wyloguj</a>
+                        <a href="{{ logout_url() }}" class="nav-link">
+                            <i class="fas fa-sign-out-alt"></i> {% trans %}page-navbar-title.logout{% endtrans %}
+                        </a>
                     </li>
 
 

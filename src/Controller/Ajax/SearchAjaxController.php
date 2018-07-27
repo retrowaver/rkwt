@@ -27,11 +27,6 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 
 
-
-
-
-
-
 class SearchAjaxController extends AbstractController
 {
     /**
