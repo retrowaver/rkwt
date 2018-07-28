@@ -38,7 +38,7 @@ class SearchAjaxController extends AbstractController
         $searchService->sanitizeSearch($search);
 
         $errorMessage = $searchService->validateSearch($search);
-        if (!is_string($errorMessage)) {
+        if (!is_array($errorMessage)) {
             // Persist
             $search->setUser($this->getUser());
             $search->setStatus(0); //
@@ -77,7 +77,7 @@ class SearchAjaxController extends AbstractController
         $search->setTimeLastFullySearched(null);
 
         $errorMessage = $searchService->validateSearch($search);
-        if (!is_string($errorMessage)) {
+        if (!is_array($errorMessage)) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 

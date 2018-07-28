@@ -47,7 +47,7 @@
 
                 {% else %}
                     <li class="nav-item">
-                        <a href="{{ path("login") }}" class="nav-link{% if app.request.attributes.get('_route') starts with 'login' %} active{% endif %}"><i class="fas fa-sign-in-alt"></i> Logowanie</a>
+                        <a href="{{ path("login") }}" class="nav-link{% if app.request.attributes.get('_route') starts with 'login' %} active{% endif %}"><i class="fas fa-sign-in-alt"></i> {% trans %}page-navbar-title.login{% endtrans %}</a>
                     </li>
                 {% endif %}
 			</ul>

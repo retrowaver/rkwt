@@ -22,7 +22,7 @@ security:
                 check_path: login
 
             logout:
-                path: /logout
+                path: logout
                 target: /
 
             #=pattern: ^/
@@ -40,9 +40,14 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-         - { path: ^/search, roles: ROLE_USER }
          - { path: ^/ajax, roles: ROLE_USER }
-         - { path: ^/item, roles: ROLE_USER }
-         - { path: ^/user, roles: ROLE_USER }
+
+        # - { path: ^/search, roles: ROLE_USER }
+        # - { path: ^/item, roles: ROLE_USER }
+        # - { path: ^/account, roles: ROLE_USER }
+
+         - { path: ^/wyszukiwania, roles: ROLE_USER }
+         - { path: ^/przedmioty, roles: ROLE_USER }
+         - { path: ^/konto, roles: ROLE_USER }
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }

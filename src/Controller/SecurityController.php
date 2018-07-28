@@ -12,7 +12,7 @@ use App\Form\UserLoginType;
 class SecurityController extends AbstractController
 {
     /**
-     * @Route("/login", name="login")
+     * @Route({"pl": "/logowanie"}, name="login")
      */
     public function login(Request $request, AuthenticationUtils $authenticationUtils)
     {

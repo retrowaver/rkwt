@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/user/settings", name="user_settings")
+     * @Route({"pl": "/konto/ustawienia"}, name="user_settings")
      */
     public function settings(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {

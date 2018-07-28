@@ -1,7 +1,6 @@
 const dataContainer = {
-	//'locale': 'pl',
-	//'localeLong': 'pl_PL'
-
-	'locale': 'en',
-	'localeLong': 'en_GB'
+	'locale': 'pl',
+	'localeLong': 'pl_PL'
 };
+
+const preloader = new Preloader();

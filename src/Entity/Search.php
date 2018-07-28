@@ -112,19 +112,6 @@ class Search
         return $this;
     }
 
-
-
-
-    /*public function clearFilters()
-    {
-        $this->filters->clear();
-    }*/
-
-
-
-
-
-
     /**
      * @return Collection|Filter[]
      */
@@ -154,6 +141,11 @@ class Search
         }
 
         return $this;
+    }
+
+    public function getFiltersCount(): int
+    {
+        return count($this->filters);
     }
 
     public function getFiltersIds(): array

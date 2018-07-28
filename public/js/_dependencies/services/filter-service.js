@@ -1,17 +1,22 @@
 class FilterService
 {
-	constructor(filterCollection, displayService, dataContainer)
+	constructor(filterCollection, displayService, dataContainer, validator, preloader)
 	{
 		this._filterCollection = filterCollection;
 		this._displayService = displayService;
 		this._dataContainer = dataContainer;
+		this._validator = validator;
+		this._preloader = preloader;
 
 		this._BASIC_FILTERS_IDS = ['category', 'userId', 'search'];
+		this._FILTER_VALUE_MAX_LENGTH = 50;
 	}
 
 	// Updates filters: 
 	updateFilters(edit = false)
 	{
+		this._preloader.show();
+
 		// Check if there's at least one basic filter present. If there isn't,
 		// then remove all remaining filters (because all more sophisticated
 		// filters need one of the basic filters - otherwise search will be
@@ -51,6 +56,8 @@ class FilterService
 				this._displayService.displayFilters();
 				//this._displayService.updateDescriptions();
 			}
+		}, this)).done($.proxy(function(){
+			this._preloader.hide();
 		}, this));
 	}
 
@@ -73,6 +80,7 @@ class FilterService
 	}
 
 	getUserIdByUsername(username) {
+		this._preloader.show();
 		$.getJSON('/ajax/allegro/userid', {username: username, csrfToken: this._dataContainer.csrfToken}, $.proxy(function(data) {
 			$("#user-id").val(data.userId);
 			if (data.userId > 0) {
@@ -80,12 +88,14 @@ class FilterService
 			} else {
 				displayService.disableSaveButton();
 			}
+		}, this)).done($.proxy(function(){
+			this._preloader.hide();
 		}, this));
 	}
 
 	getValuesFromForm()
 	{
-		var formData = $('#new-search-form').serializeArray();
+		var formData = $('.new-search-form').serializeArray();
 		var values = [];
 		$.each(formData, function() {
 			values.push(this.value);
@@ -135,13 +145,24 @@ class FilterService
 
 		// Do the same checks for both fields (or just one, if there's only one)
 		for (var i = 0; i < 2; i++) {
+			if (values[i] === '' || typeof(values[i]) === 'undefined') {
+				continue;
+			}
+
+			// Universal checks
+
+			//
+			if (values[i].length > this._FILTER_VALUE_MAX_LENGTH) {
+				return false;
+			}
+
 			// Checks based on filterId
 			// (exceptions made for most frequently used fields)
 			switch (meta.filterId) {
 				case 'price':
 					return (
-						validator.isDecimal(values[i], {locale: 'pl-PL', decimal_digits: '0,2'})
-						&& validator.isFloat(values[i], {locale: 'pl-PL', min: 0})
+						this._validator.isDecimal(values[i], {locale: 'pl-PL', decimal_digits: '0,2'})
+						&& this._validator.isFloat(values[i], {locale: 'pl-PL', min: 0})
 					);
 					break;
 			}
@@ -150,10 +171,10 @@ class FilterService
 			switch (meta.filterDataType) {
 				case 'long':
 				case 'int':
-					return validator.isInt(values[i], {allow_leading_zeroes: false});
+					return this._validator.isInt(values[i], {allow_leading_zeroes: false});
 					break;
 				case 'float':
-					return validator.isDecimal(values[i], {locale: 'pl-PL'});
+					return this._validator.isDecimal(values[i], {locale: 'pl-PL'});
 					break;
 			}
 		}

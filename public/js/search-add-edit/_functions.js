@@ -1,3 +1,7 @@
+$(document).on("submit", ".new-search-form", function(event){
+	event.preventDefault();
+});
+
 $(".change-search-name").click(function() {
 	var searchName = dataContainer.filterData.name;
 
@@ -127,7 +131,7 @@ $('#filters').on('click', '.remove-filter', function(){
 	$("#filter-picker-modal").modal('show');
 });*/
 
-$(".new-filter").click(function() {
+/*$(".new-filter").click(function() {
 	// Get filter id from option value
 	var filterId = $("#filters-container").val();
 
@@ -143,4 +147,18 @@ $(".new-filter").click(function() {
 
 	$("#filter-picker-modal").modal('hide');
 	displayService.displayModal(filterId);
+});*/
+
+$("#filters-container").change(function() {
+	// Get filter id from option value
+	var filterId = $(this).val();
+
+	dataContainer.currentFilter = filterId;
+
+
+	$("#filter-picker-modal").modal('hide');
+	displayService.displayModal(filterId);
+
+	// Reset select
+	$(this).prop('selectedIndex', 0);
 });

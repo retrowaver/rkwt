@@ -1,6 +1,6 @@
 class TemplatesContainer
 {
-	constructor()
+	constructor(Handlebars)
 	{
 		Handlebars.registerHelper('trans',
 			function(str){

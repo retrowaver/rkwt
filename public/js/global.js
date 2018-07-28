@@ -8,12 +8,10 @@ $.i18n({
 
 $.i18n().load({
 	'pl': '/js/_translations/pl.json',
-	'en': '/js/_translations/en.json'
+	//'en': '/js/_translations/en.json'
 }).done(function() {
 	// Do some initial work if needed, e.g. load some stuff through AJAX
 	if (typeof(initial) !== 'undefined') {
 		initial();
 	}
-
-	//console.log($.i18n('test'));
 });

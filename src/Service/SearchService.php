@@ -16,12 +16,14 @@ use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 class SearchService implements SearchServiceInterface
 {
     const NEW_SEARCH_MAX_ITEMS_COUNT = 2000;
-
-    const ERROR_DEFAULT = 'Nieznany błąd. Skontaktuj się z administratorem.';
-    const ERROR_TOO_MANY_ITEMS = 'Znaleziono zbyt dużo przedmiotów (%d, podczas gdy limit wynosi %d). Spróbuj zawęzić kryteria wyszukiwania.';
-    const ERROR_SEARCH_NAME_TOO_LONG = 'Nazwa wyszukiwania jest zbyt długa.';
-
     const SEARCH_NAME_MAX_LENGTH = 40;
+    const FILTER_VALUE_MAX_LENGTH = 50;
+
+    // localized in js
+    const ERROR_DEFAULT = 'error-search-default';
+    const ERROR_NO_FILTERS = 'error-search-no-filters';
+    const ERROR_TOO_MANY_ITEMS = 'error-search-too-many-items';
+    const ERROR_SEARCH_NAME_TOO_LONG = 'error-search-search-name-too-long';
 
 	private $allegro;
 
@@ -50,6 +52,11 @@ class SearchService implements SearchServiceInterface
 
     public function validateSearch(Search $search)
     {
+        // Check if search has at least one filter
+        if ($search->getFiltersCount() === 0) {
+            return [self::ERROR_NO_FILTERS];
+        }
+
         // Check search against Allegro API
         //
         // If API error code is known (i.e. ERR_INCORRECT_FILTER_VALUE), then
@@ -62,7 +69,7 @@ class SearchService implements SearchServiceInterface
                     return $e->getMessage();
                     break;
                 default:
-                     return self::ERROR_DEFAULT;
+                     return [self::ERROR_DEFAULT];
             }
     	}
 
@@ -70,38 +77,46 @@ class SearchService implements SearchServiceInterface
         // (this should only happen due to user modifying the request)
         // https://allegro.pl/webapi/documentation.php/show/id,1342#method-output
         if (!empty($filtersInfo['rejected'])) {
-            return self::ERROR_DEFAULT;
+            return [self::ERROR_DEFAULT];
         }
 
         // Check the amount of items found
     	if ($filtersInfo['itemsCount'] > self::NEW_SEARCH_MAX_ITEMS_COUNT) {
-    		return sprintf(
+    		return [
     			self::ERROR_TOO_MANY_ITEMS,
     			$filtersInfo['itemsCount'],
     			self::NEW_SEARCH_MAX_ITEMS_COUNT
-    		);
+    		];
     	}
 
         // Check whether any filters are duplicated
         // (this should only happen due to user modifying the request)
         if ($this->hasSearchDuplicatedFilterIds($search)) {
-            return self::ERROR_DEFAULT;
+            return [self::ERROR_DEFAULT];
         }
 
         // Check whether there are any filters with unexpected ids
         // (this case should be ruled out by "rejected" check above, but better safe than sorry)
         if ($this->hasSearchUnexpectedFilterIds($search, $filtersInfo['available'])) {
-            return self::ERROR_DEFAULT;
+            return [self::ERROR_DEFAULT];
         }
 
-        //
+        // Check if search contains unwanted filters
         if ($this->hasSearchBannedFilterIds($search)) {
-            return self::ERROR_DEFAULT;
+            return [self::ERROR_DEFAULT];
         }
         
-        //
+        // Check if search name is too long
         if (strlen($search->getName()) > self::SEARCH_NAME_MAX_LENGTH) {
-            return self::ERROR_SEARCH_NAME_TOO_LONG;
+            return [self::ERROR_SEARCH_NAME_TOO_LONG];
+        }
+
+        foreach ($search->getFilters() as $filter) {
+            foreach ($filter->getRawValues() as $value) {
+                if (strlen($value) > self::FILTER_VALUE_MAX_LENGTH) {
+                    return [self::ERROR_DEFAULT];
+                }
+            }
         }
 
     	return true;
@@ -138,7 +153,12 @@ class SearchService implements SearchServiceInterface
 
     private function preDenormalizeSearch(array $searchData): array
     {
-        // Ugly as hell, but I have no idea how to do it in more elegant way
+        //
+        if (empty($searchData['filters'])) {
+            return $searchData;
+        }
+
+        //
         $newFilters = [];
         foreach ($searchData['filters'] as $filter) {
             $newFilter = ['filterId' => $filter['filterId']];
@@ -164,20 +184,4 @@ class SearchService implements SearchServiceInterface
 
         return $searchData;
     }
-
-
-
-
-
-	//pasowaloby searcha z initial serczem puszczac jakos w jednej transakcji chyba, ew. aktywowac jakos searcha dopiero po wgraniu initial data
-
-	/*public function getSearchFromData(string $name, array $filters): Search
-	{
-
-
-		return new Search(
-			$name,
-			$filtersCollection
-		);
-	}*/
 }

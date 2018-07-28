@@ -137,4 +137,21 @@ class Filter
 
         return $this;
     }
+
+    public function getRawValues(): array
+    {
+        $values = [];
+        if ($this->valueRangeMin !== null) {
+            $values[] = $this->valueRangeMin;
+        }
+        if ($this->valueRangeMax !== null) {
+            $values[] = $this->valueRangeMax;
+        }
+
+        foreach ($this->filterValues as $filterValue) {
+            $values[] = $filterValue->getFilterValue();
+        }
+
+        return $values;
+    }
 }

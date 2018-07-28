@@ -20,5 +20,7 @@
 	"label-select-choose": "-- Choose --",
 	"label-go-back": "go back",
 
-	"default-search-name": "untitled"
+	"default-search-name": "untitled",
+
+	"route-search-list": "/search/list"
 }

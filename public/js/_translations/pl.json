@@ -20,5 +20,15 @@
 	"label-select-choose": "-- Wybierz --",
 	"label-go-back": "wstecz",
 
-	"default-search-name": "bez nazwy"
+	"default-search-name": "bez nazwy",
+
+	"route-search-list": "/wyszukiwania/lista",
+
+	"error-search-default": "Nieznany błąd. Skontaktuj się z administratorem.",
+	"error-search-no-filters": "Wyszukiwanie nie zawiera jakichkolwiek filtrów.",
+	"error-search-too-many-items": "Znaleziono zbyt dużo przedmiotów ($1, podczas gdy limit wynosi $2). Spróbuj zawęzić kryteria wyszukiwania.",
+	"error-search-search-name-too-long": "Nazwa wyszukiwania jest zbyt długa."
+
+
+	
 }

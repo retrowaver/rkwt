@@ -1,2 +1,2 @@
 const displayService = new ItemDisplayService();
-const itemService = new ItemService(displayService, dataContainer);
+const itemService = new ItemService(displayService, dataContainer, preloader);

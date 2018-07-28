@@ -156,6 +156,10 @@
                 <source>page-navbar-title.logout</source>
                 <target>Log out</target>
             </trans-unit>
+            <trans-unit id="page-navbar-title.login">
+                <source>page-navbar-title.login</source>
+                <target>Log in</target>
+            </trans-unit>
 
 
 

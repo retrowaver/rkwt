@@ -1,2 +1,2 @@
 const displayService = new SearchListDisplayService();
-const searchListService = new SearchListService(displayService, dataContainer);
+const searchListService = new SearchListService(displayService, dataContainer, preloader);

@@ -24,8 +24,8 @@ use App\Service\Allegro\AllegroServiceInterface;
 class ItemController extends AbstractController
 {
     /**
-     * @Route("/item/list", defaults={"page": "1"}, name="item_list")
-     * @Route("/item/list/{page}", requirements={"page": "[1-9]\d*"}, name="item_list_paginated")
+     * @Route({"pl": "/przedmioty/lista"}, defaults={"page": "1"}, name="item_list")
+     * @Route({"pl": "/przedmioty/lista/{page}"}, requirements={"page": "[1-9]\d*"}, name="item_list_paginated")
      */
     public function itemList(int $page, ItemRepository $itemRepository)
     {
@@ -37,21 +37,6 @@ class ItemController extends AbstractController
 
         return $this->render('item/item_list.html.twig', [
             'items' => $items,
-        ]);
-    }
-
-    /**
-     * @Route("/item/test", name="item_test")
-     */
-    public function test(SearchUpdateService $update)
-    {
-        $searches = $update->getActiveSearches();
-        $update->updateSearches($searches);
-
-        //echo 'ee5';
-        //exit;
-        return $this->render('item/item_list.html.twig', [
-            'items' => [],
         ]);
     }
 }

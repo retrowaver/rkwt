@@ -57,20 +57,22 @@
 </script>
 
 <script id="new-search-checkbox-template" type="text/x-handlebars-template">
-	<form id="new-search-form">
-		{{#each filterValues.item}}
-		<div class="form-check">
-		  <input class="form-check-input validate-filter" type="checkbox" value="{{filterValueId}}" id="filter-{{filterValueId}}" name="new-filter-value[]">
-		  <label class="form-check-label" for="filter-{{filterValueId}}">
-		   	{{filterValueName}}
-		  </label>
-		</div>
-		{{/each}}
-	</form>
+	<div class="two-columns">
+		<form class="new-search-form">
+			{{#each filterValues.item}}
+			<div class="form-check">
+			  <input class="form-check-input validate-filter" type="checkbox" value="{{filterValueId}}" id="filter-{{filterValueId}}" name="new-filter-value[]">
+			  <label class="form-check-label" for="filter-{{filterValueId}}">
+			   	{{filterValueName}}
+			  </label>
+			</div>
+			{{/each}}
+		</form>
+	</div>
 </script>
 
 <script id="new-search-combobox-template" type="text/x-handlebars-template">
-	<form id="new-search-form">
+	<form class="new-search-form">
 		<select class="validate-filter" name="new-filter-value[]">
 			<option disabled selected>{{#trans}}label-select-choose{{/trans}}</option>
 			{{#each filterValues.item}}
@@ -81,7 +83,7 @@
 </script>
 
 <script id="new-search-textbox-template" type="text/x-handlebars-template">
-	<form id="new-search-form">
+	<form class="new-search-form">
 		{{#if filterIsRange}}
 			<label for="start-value">{{#trans}}label-min-value{{/trans}}:</label>
 			<input type="text" class="form-control validate-filter" id="start-value" name="new-filter-value[]">
@@ -94,7 +96,7 @@
 </script>
 
 <script id="new-search-category-template" type="text/x-handlebars-template">
-	<form id="new-search-form">
+	<form class="new-search-form">
 		<div id="category-picker-list">
 
 		</div>
@@ -104,23 +106,24 @@
 
 
 <script id="new-search-category-picker-list-template" type="text/x-handlebars-template">
-	
-	{{#if parentCategory}}
-		<a href="#" class="category-to-pick" data-category-id="{{parentCategory.catParent}}">
-			<i class="fas fa-caret-left"></i> {{#trans}}label-go-back{{/trans}} ({{parentCategory.catName}})
-		</a><br>
-	{{/if}}
+	<div class="two-columns">
+		{{#if parentCategory}}
+			<a href="#" class="category-to-pick font-weight-bold" data-category-id="{{parentCategory.catParent}}">
+				<i class="fas fa-caret-left"></i> {{#trans}}label-go-back{{/trans}} ({{parentCategory.catName}})
+			</a><br>
+		{{/if}}
 
-	{{#each categories}}
-		<a href="#" class="category-to-pick" data-category-id="{{catId}}">{{catName}}</a><br>
-	{{/each}}
+		{{#each categories}}
+			<a href="#" class="category-to-pick" data-category-id="{{catId}}">{{catName}}</a><br>
+		{{/each}}
+	</div>
 
 	<p class="chosen-category-info"></p>
 	
 </script>
 
 <script id="new-search-user-id-template" type="text/x-handlebars-template">
-	<form id="new-search-form">
+	<form class="new-search-form">
 		<input type="text" class="form-control" id="user-id-picker-username">
 		<input type="hidden" class="form-control" name="new-filter-value[]" id="user-id" value="0">
 	</form>

@@ -1,10 +1,12 @@
 class SearchDisplayService
 {
-	constructor(filterCollection, templates, dataContainer)
+	constructor(filterCollection, templates, dataContainer, validator, preloader)
 	{
 		this._filterCollection = filterCollection;
 		this._templates = templates;
 		this._dataContainer = dataContainer;
+		this._validator = validator;
+		this._preloader = preloader;
 	}
 
 	displayModal(filterId, edit = false)
@@ -102,7 +104,7 @@ class SearchDisplayService
 	openChangeSearchNameInput(searchName)
 	{
 		$(".change-search-name-input").show().focus().val("").val(
-			validator.unescape(searchName)
+			this._validator.unescape(searchName)
 		);
 		$(".search-name").hide();
 		$(".change-search-name").hide();
@@ -112,7 +114,7 @@ class SearchDisplayService
 	closeChangeSearchNameInput(newSearchName)
 	{
 		$(".search-name").html(
-			validator.escape(newSearchName)
+			this._validator.escape(newSearchName)
 		);
 		$(".search-name").show();
 		$(".change-search-name").show();
@@ -121,6 +123,8 @@ class SearchDisplayService
 
 	updateCategoryPickerTree(categoryId = null)
 	{
+		this._preloader.show();
+
 		if (categoryId === null) {
 			categoryId = $("#category-id").val();
 		}
@@ -141,6 +145,8 @@ class SearchDisplayService
 				this.disableSaveButton();
 				$(".chosen-category-info").html();
 			}
+		}, this)).done($.proxy(function(){
+			this._preloader.hide();
 		}, this));
 	}
 
@@ -264,12 +270,16 @@ class SearchDisplayService
 
 	_alterUserIdModalWithExistingValues(meta, values)
 	{
+		this._preloader.show();
+
 		var userId = values.filterValueId[0];
 		$("input[name='new-filter-value[]']").val(userId);
 
 		// Username isn't stored in db, therefore has to be requested.
 		$.getJSON('/ajax/allegro/username', {userId: userId, csrfToken: this._dataContainer.csrfToken}, $.proxy(function(data) {
 			$("#user-id-picker-username").val(data.username);
+		}, this)).done($.proxy(function(){
+			this._preloader.hide();
 		}, this));
 	}
 
