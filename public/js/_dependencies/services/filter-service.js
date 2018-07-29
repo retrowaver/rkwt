@@ -129,7 +129,7 @@ class FilterService
 	_validateTextboxFilter(values, meta)
 	{
 		// Check if 1 out of 1 or 2 out of 2 fields are empty
-		if (values.join() === '') {
+		if (values.join('') === '') {
 			return false;
 		}
 
@@ -149,6 +149,7 @@ class FilterService
 				continue;
 			}
 
+
 			// Universal checks
 
 			//
@@ -160,10 +161,12 @@ class FilterService
 			// (exceptions made for most frequently used fields)
 			switch (meta.filterId) {
 				case 'price':
-					return (
-						this._validator.isDecimal(values[i], {locale: 'pl-PL', decimal_digits: '0,2'})
-						&& this._validator.isFloat(values[i], {locale: 'pl-PL', min: 0})
-					);
+					if (
+						!this._validator.isDecimal(values[i], {locale: 'pl-PL', decimal_digits: '0,2'})
+						|| !this._validator.isFloat(values[i], {locale: 'pl-PL', min: 0})
+					) {
+						return false;
+					}
 					break;
 			}
 
@@ -171,10 +174,14 @@ class FilterService
 			switch (meta.filterDataType) {
 				case 'long':
 				case 'int':
-					return this._validator.isInt(values[i], {allow_leading_zeroes: false});
+					if (!this._validator.isInt(values[i], {allow_leading_zeroes: false})) {
+						return false;
+					}
 					break;
 				case 'float':
-					return this._validator.isDecimal(values[i], {locale: 'pl-PL'});
+					if (!this._validator.isDecimal(values[i], {locale: 'pl-PL'})) {
+						return false;
+					}
 					break;
 			}
 		}

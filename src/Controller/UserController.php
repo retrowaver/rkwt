@@ -21,7 +21,7 @@ class UserController extends AbstractController
     	$form->handleRequest($request);
 
     	if ($form->isSubmitted() && $form->isValid()) {
-    		if ($user->getPlainPassword() !== 'null') {
+    		if ($user->getPlainPassword() !== null) {
     			$password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
             	$user->setPassword($password);
     		}

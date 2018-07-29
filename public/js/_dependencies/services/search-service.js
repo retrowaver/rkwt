@@ -40,7 +40,6 @@ class SearchService
 	{
 		this._preloader.show();
 		$.getJSON('/ajax/search/get/' + searchId, {csrfToken: this._dataContainer.csrfToken}, $.proxy(function(search) {
-			console.log(search);
 			this._filterCollection.setValues(search.filtersForApi);
 
 			this._dataContainer.filterData = {

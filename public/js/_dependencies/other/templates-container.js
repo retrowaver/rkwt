@@ -8,6 +8,14 @@ class TemplatesContainer
 			}
 		);
 
+		// https://stackoverflow.com/questions/15088215/handlebars-js-if-block-helper
+		Handlebars.registerHelper('if_equals', function(a, b, opts) {
+		    if(a == b)
+		        return opts.fn(this);
+		    else
+		        return opts.inverse(this);
+		});
+
 		this.searchSelect = Handlebars.compile($("#search-select-template").html());
 		this.newSearchCombobox = Handlebars.compile($("#new-search-combobox-template").html());
 		this.newSearchCheckbox = Handlebars.compile($("#new-search-checkbox-template").html());

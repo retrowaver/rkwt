@@ -7,14 +7,18 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\Service\Tools\SearchUpdateService;
 use App\Service\Tools\SearchUpdateServiceInterface;
+use App\Service\Tools\NotificationsService;
+use App\Service\Tools\NotificationsServiceInterface;
 
 class UpdateSearchesCommand extends Command
 {
-	private $em;
+	private $searchUpdateService;
+    private $notificationsService;
 
-	public function __construct(SearchUpdateServiceInterface $searchUpdateService)
+	public function __construct(SearchUpdateServiceInterface $searchUpdateService, NotificationsServiceInterface $notificationsService)
     {
         $this->searchUpdateService = $searchUpdateService;
+        $this->notificationsService = $notificationsService;
 
         parent::__construct(); 
     }
@@ -33,5 +37,7 @@ class UpdateSearchesCommand extends Command
         $this->searchUpdateService->updateSearches(
             $this->searchUpdateService->getActiveSearches()
         );
+
+        $this->notificationsService->sendNotifications();
     }
 }

@@ -13,8 +13,8 @@
 	    <tr>
 	      <th scope="col"><i class="far fa-image"></i></th>
 	      <th scope="col">{% trans %}label.item-title{% endtrans %}</th>
-	      <th scope="col">{% trans %}label.item-price{% endtrans %}</th>
-	      <th scope="col">{% trans %}label.item-time-found{% endtrans %}</th>
+	      <th scope="col" class="d-none d-sm-table-cell">{% trans %}label.item-price{% endtrans %}</th>
+	      <th scope="col" class="d-none d-sm-table-cell">{% trans %}label.item-time-found{% endtrans %}</th>
 	      <th scope="col">{% trans %}label.actions{% endtrans %}</th>
 	    </tr>
 	  </thead>
@@ -35,10 +35,10 @@
 						{{ item.auctionTitle }} <i class="fas fa-external-link-alt small-icon"></i>
 					</a>
 				</td>
-				<td>
+				<td class="d-none d-sm-table-cell">
 					{{ item.auctionPrice|number_format(2, ',', ' ') }} zł
 				</td>
-				<td>
+				<td class="d-none d-sm-table-cell">
 					{% if "now"|date('Y-m-d') == item.timeFound|date('Y-m-d') %}
 						{% trans %}label.today{% endtrans %},
 					{% elseif "1 day ago"|date('Y-m-d') == item.timeFound|date('Y-m-d') %}

@@ -167,3 +167,25 @@ a {
 	max-height: 350px;
     overflow-y: auto;
 }
+
+
+
+
+
+
+
+
+
+input[type='number'] {
+    -moz-appearance:textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+#homepage-body h3 {
+	margin-top: 30px;
+	margin-bottom: 20px;
+}

@@ -1,0 +1,8 @@
+<p>Znaleziono następujące aukcje:</p>
+<ul>
+	{% for item in items %}
+		<li>
+			<a href="http://allegro.pl/show_item.php?item={{ item.getAuctionId() }}">{{ item.getAuctionTitle() }}</a>
+		</li>
+	{% endfor %}
+</ul>

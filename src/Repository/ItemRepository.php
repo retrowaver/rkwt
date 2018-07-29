@@ -25,10 +25,6 @@ class ItemRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Item::class);
     }
-
-//    /**
-//     * @return Item[] Returns an array of Item objects
-//     */
     
     public function findLatest(int $userId, array $statuses = [], int $page = 1): Pagerfanta
     {
@@ -67,6 +63,17 @@ class ItemRepository extends ServiceEntityRepository
             $queryBuilder->getQuery()
                 ->getResult()
         );*/
+    }
+
+    public function findByStatus(int $status): Collection
+    {
+        return new ArrayCollection(
+            $this->createQueryBuilder('i')
+                ->andWhere('i.status = :status')
+                ->setParameter('status', $status)
+                ->getQuery()
+                ->getResult()
+        );
     }
 
     private function createPaginator(Query $query, int $page): Pagerfanta

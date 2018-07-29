@@ -131,6 +131,10 @@
                 <source>page-title.security.login</source>
                 <target>Log in</target>
             </trans-unit>
+            <trans-unit id="page-title.homepage">
+                <source>page-title.homepage</source>
+                <target>Getting started</target>
+            </trans-unit>
 
             <trans-unit id="page-navbar-title.item.list">
                 <source>page-navbar-title.item.list</source>
@@ -159,6 +163,10 @@
             <trans-unit id="page-navbar-title.login">
                 <source>page-navbar-title.login</source>
                 <target>Log in</target>
+            </trans-unit>
+            <trans-unit id="page-navbar-title.homepage">
+                <source>page-navbar-title.homepage</source>
+                <target>Getting started</target>
             </trans-unit>
 
 

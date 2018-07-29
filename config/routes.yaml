@@ -15,14 +15,14 @@ logout:
 #        pl: /logowanie
 
 
-homepage:
-    path: /
-    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction
-    defaults:
+#homepage:
+#    path: /
+#    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction
+#    defaults:
         #path: search_list
         #path: /wyszukiwania/lista
         #path:
         #    en: /search/list
         #    pl: /wyszukiwania/lista
-        route: search_list
-        permanent: true
+#        route: search_list
+#        permanent: true

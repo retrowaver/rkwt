@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block meta_title %}
+	{% trans %}page-title.homepage{% endtrans %}
+{% endblock %}
+{% block title %}
+	{% trans %}page-title.homepage{% endtrans %}
+{% endblock %}
+
+{% block body %}
+	<div id="homepage-body">
+		<p>Allefinder to darmowa usługa, umożliwiająca automatyczne wyszukiwanie nowych aukcji w serwisie Allegro.pl.</p>
+		<hr>
+		<h3>Do czego to służy?</h3>
+		<div class="container">
+		  <div class="row">
+		    <div class="col">
+		    	<div class="card">
+			 	 <div class="card-body">
+		     		 <p class="text-justify"><strong>Okazje:</strong> bądź pierwszym, który dowie się o przedmiocie, który został wystawiony w wyjątkowo okazyjnej cenie i kup go, zanim zrobi to ktoś inny.</p>
+		     	</div>
+		     </div>
+		    </div>
+		    <div class="col">
+		    	    	<div class="card">
+			 	 <div class="card-body">
+		      <p class="text-justify"><strong>Unikaty:</strong> chcesz kupić przedmiot, który pojawia się na Allegro bardzo rzadko? Allefinder będzie śledził aukcje za Ciebie i powiadomi Cię, gdy tylko coś znajdzie.</p>
+		     </div>
+		     </div>
+		    </div>
+		  </div>
+	 	 </div>
+
+	<hr>
+	 	 <h3>Jak to działa?</h3>
+
+	<div class="container">
+	  <div class="row">
+	    <div class="col">
+
+
+			<div class="card">
+			  <div class="card-body">
+			    <p class="text-justify"><strong>Krok 1:</strong> Wpisujesz szukaną frazę, opcjonalnie określając cenę, stan, kategorię lub dowolne inne parametry przedmiotu.</p>
+			  </div>
+			</div>
+
+
+	      
+	    </div>
+	    <div class="col">
+
+
+			<div class="card">
+			  <div class="card-body">
+	      		<p class="text-justify"><strong>Krok 2:</strong> Allefinder zaczyna monitorować nowe aukcje, wypatrując przedmiotów zgodnych z określonymi przez Ciebie wymaganiami.</p>
+			  </div>
+			</div>
+
+
+	    </div>
+	    <div class="col">
+
+
+			<div class="card">
+			  <div class="card-body">
+	      		<p class="text-justify"><strong>Krok 3:</strong> Ilekroć Allefinder wyszuka dla Ciebie przedmiot, otrzymasz powiadomienie mailowe.</p>
+			  </div>
+			</div>
+
+
+	    </div>
+	  </div>
+	</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	<script src="/js/_dependencies/display-services/item-display-service.js"></script>
+	<script src="/js/_dependencies/services/item-service.js"></script>
+	<script src="/js/item-list/_dependencies.js"></script>
+	<script src="/js/item-list/_functions.js"></script>
+{% endblock %}

@@ -37,9 +37,13 @@ class SearchUpdateService implements SearchUpdateServiceInterface
 
 	public function updateSearches(Collection $searches): void
     {
+        $start = time();
+
         foreach ($searches as $search) {
             $this->updateSearch($search);
         }
+
+        printf("%s - search update ended (took %d seconds, updated %d searches)\n", date('Y-m-d H:i:s'), time() - $start, count($searches));
     }
 
     public function updateSearch(Search $search): void

@@ -28,7 +28,7 @@ $("#new-search-modal").on("input", "#user-id-picker-username", function() {
 	displayService.disableSaveButton();
 });
 
-$("#new-search-modal").on("change", "#user-id-picker-username", function() {
+$("#new-search-modal").on("input", "#user-id-picker-username", $.debounce(500, function() {
 	var username = $("#user-id-picker-username").val();
 
 	//but also validate & insert & change buttons
@@ -36,16 +36,11 @@ $("#new-search-modal").on("change", "#user-id-picker-username", function() {
 	//displayService.disableSaveButton();
 	filterService.getUserIdByUsername(username);
 	//console.log(userId);
-});
-
-
-
-
-
+}));
 
 
 //validation
-$("#new-search-modal").on("change", ".validate-filter", function() {
+$("#new-search-modal").on("input", ".validate-filter", function() {
 	if (filterService.validateFilter(dataContainer.currentFilter)) {
 		displayService.enableSaveButton();
 	} else {

@@ -1,8 +1,12 @@
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
 	<div class="container">
-		<a href="/" class="navbar-brand">rkwt</a>
+		<a href="/" class="navbar-brand">
+            <img src="/img/logo.png" />
+        </a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mobile-nav">
-			<span class="navbar-toggle-icon"></span>
+			<span class="navbar-toggle-icon">
+                <i class="fas fa-bars"></i>
+            </span>
 		</button>
 		<div class="collapse navbar-collapse" id="mobile-nav">
 			<ul class="navbar-nav ml-auto">
@@ -46,6 +50,9 @@
 
 
                 {% else %}
+                    <li class="nav-item">
+                        <a href="{{ path("homepage") }}" class="nav-link{% if app.request.attributes.get('_route') starts with 'homepage' %} active{% endif %}"><i class="fas fa-home"></i> {% trans %}page-navbar-title.homepage{% endtrans %}</a>
+                    </li>
                     <li class="nav-item">
                         <a href="{{ path("login") }}" class="nav-link{% if app.request.attributes.get('_route') starts with 'login' %} active{% endif %}"><i class="fas fa-sign-in-alt"></i> {% trans %}page-navbar-title.login{% endtrans %}</a>
                     </li>
