@@ -1,11 +1,10 @@
 class SearchDisplayService
 {
-	constructor(filterCollection, templates, dataContainer, validator, preloader)
+	constructor(filterCollection, templates, dataContainer, preloader)
 	{
 		this._filterCollection = filterCollection;
 		this._templates = templates;
 		this._dataContainer = dataContainer;
-		this._validator = validator;
 		this._preloader = preloader;
 	}
 
@@ -104,7 +103,7 @@ class SearchDisplayService
 	openChangeSearchNameInput(searchName)
 	{
 		$(".change-search-name-input").show().focus().val("").val(
-			this._validator.unescape(searchName)
+			searchName
 		);
 		$(".search-name").hide();
 		$(".change-search-name").hide();
@@ -114,7 +113,7 @@ class SearchDisplayService
 	closeChangeSearchNameInput(newSearchName)
 	{
 		$(".search-name").html(
-			this._validator.escape(newSearchName)
+			newSearchName
 		);
 		$(".search-name").show();
 		$(".change-search-name").show();

@@ -14,7 +14,7 @@ class SearchService
 		this._preloader.show();
 
 		var search = {
-			name: this._dataContainer.filterData.name,
+			name: this._dataContainer.searchData.name,
 			filters: this._filterCollection.getFiltersForApi()
 		};
 
@@ -42,7 +42,7 @@ class SearchService
 		$.getJSON('/ajax/search/get/' + searchId, {csrfToken: this._dataContainer.csrfToken}, $.proxy(function(search) {
 			this._filterCollection.setValues(search.filtersForApi);
 
-			this._dataContainer.filterData = {
+			this._dataContainer.searchData = {
 				name: search.name,
 				id: search.id
 			}

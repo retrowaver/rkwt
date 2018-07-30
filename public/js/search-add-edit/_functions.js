@@ -3,19 +3,23 @@ $(document).on("submit", ".new-search-form", function(event){
 });
 
 $(".change-search-name").click(function() {
-	var searchName = dataContainer.filterData.name;
-
-	displayService.openChangeSearchNameInput(searchName);
+	displayService.openChangeSearchNameInput(
+		dataContainer.searchData.name
+	);
 });
 
 $(".change-search-name-input").focusout(function() {
-	var newSearchName = $(this).val();
+	var newSearchName = $(this).val().trim();
 
-	if (newSearchName.trim().length > 0 && newSearchName.trim().length <= 40) {
-		dataContainer.filterData.name = validator.escape(newSearchName.trim());
-		displayService.closeChangeSearchNameInput(newSearchName.trim());	
+	if (newSearchName.length > 0 && newSearchName.length <= 40) {
+		dataContainer.searchData.name = newSearchName;
+		displayService.closeChangeSearchNameInput(
+			validator.escape(newSearchName)
+		);	
 	} else {
-		displayService.closeChangeSearchNameInput(dataContainer.filterData.name);
+		displayService.closeChangeSearchNameInput(
+			validator.escape(dataContainer.searchData.name)
+		);
 	}
 });
 
@@ -63,7 +67,7 @@ $(".save-new-search").click(function() {
 
 $(".save-edited-search").click(function() {
 	searchService.saveSearch(
-		dataContainer.filterData.id
+		dataContainer.searchData.id
 	);
 });
 

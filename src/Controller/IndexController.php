@@ -28,7 +28,7 @@ class IndexController extends AbstractController
     public function index()
     {
         if($this->isGranted('ROLE_USER')) {
-            return $this->redirectToRoute('search_list');
+            return $this->redirectToRoute('item_list');
         }
 
         return $this->render('index/index.html.twig');
