@@ -152,6 +152,11 @@ class User implements UserInterface, \Serializable
         return $this->searches;
     }
 
+    public function getSearchCount(): int
+    {
+        return count($this->searches);
+    }
+
     public function addSearch(Search $search): self
     {
         if (!$this->searches->contains($search)) {

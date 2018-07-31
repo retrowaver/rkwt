@@ -9,23 +9,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Service\SearchServiceInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
 use App\Entity\Search;
-
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
-
-
-
-
-////////////////
 use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-
-
 
 class SearchAjaxController extends AbstractController
 {
@@ -34,30 +24,15 @@ class SearchAjaxController extends AbstractController
      */
     public function saveSearch(Request $request, SearchServiceInterface $searchService): JsonResponse
     {
-        $search = $searchService->denormalizeSearch($request->query->get('search'));
-        $searchService->sanitizeSearch($search);
-
-        $errorMessage = $searchService->validateSearch($search);
-        if (!is_array($errorMessage)) {
-            // Persist
-            $search->setUser($this->getUser());
-            $search->setStatus(0); //
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($search);
-            $entityManager->flush();
-
-            $this->addFlash(
-                'notice',
-                'Dodano wyszukiwanie!'
-            );
-        }
+        $errorMessage = $searchService->saveNewSearch(
+            $this->getUser(),
+            $request->query->get('search')
+        );
 
         return new JsonResponse([
             'success' => ($errorMessage === true),
             'error' => $errorMessage !== true ? $errorMessage : null,
         ]);
-
     }
 
     /**
@@ -66,26 +41,11 @@ class SearchAjaxController extends AbstractController
      */
     public function editSearch(Request $request, SearchServiceInterface $searchService, Search $search): JsonResponse
     {
-        $editedSearch = $searchService->denormalizeSearch($request->query->get('search'));
-        $searchService->sanitizeSearch($editedSearch);
-
-        $search->setName($editedSearch->getName());
-        $search->setFilters($editedSearch->getFilters());
-
-        $search->setStatus(0);
-        $search->setTimeLastSearched(null);
-        $search->setTimeLastFullySearched(null);
-
-        $errorMessage = $searchService->validateSearch($search);
-        if (!is_array($errorMessage)) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->flush();
-
-            $this->addFlash(
-                'notice',
-                'Zapisano zmiany!'
-            );
-        }
+        $errorMessage = $searchService->saveEditedSearch(
+            $this->getUser(),
+            $search,
+            $request->query->get('search')
+        );
 
         return new JsonResponse([
             'success' => ($errorMessage === true),

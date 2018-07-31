@@ -8,6 +8,11 @@
 {% endblock %}
 
 {% block body %}
+	{% if not searchCount %}
+		<div class="alert alert-info" role="alert">
+			{% trans %}message.no-searches-need-to-add-one{% endtrans %} <a href="{{ path("search_new") }}"><strong>{% trans %}label.click-here{% endtrans %}</strong></a>.
+		</div>
+	{% endif %}
 	<table class="table table-hover" id="item-list">
 	   <thead class="thead">
 	    <tr>

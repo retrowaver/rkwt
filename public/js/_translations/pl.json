@@ -5,7 +5,6 @@
 
 	"message-chosen-category": "Wybrana kategoria: $1",
 	"message-missing-basic-filter": "Najpierw dodaj filtr podstawowy",
-	"message-missing-category-filter": "Najpierw doprecyzuj kategorię",
 
 	"label-error": "Błąd",
 	"label-min-value": "Od",

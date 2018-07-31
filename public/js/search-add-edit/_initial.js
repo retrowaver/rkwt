@@ -1,6 +1,6 @@
 var initial = function() {
 	dataContainer.currentFilter = null;
-	dataContainer.filterData = {
+	dataContainer.searchData = {
 		name: $.i18n('default-search-name')
 	};
 

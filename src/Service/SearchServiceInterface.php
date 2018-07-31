@@ -3,12 +3,11 @@
 namespace App\Service;
 
 use App\Entity\Search;
+use App\Entity\User;
 
 interface SearchServiceInterface
 {
-	public function denormalizeSearch(array $searchData): Search;
+	public function saveNewSearch(User $user, array $searchData);
 
-	public function sanitizeSearch(Search $search): Search;
-
-	public function validateSearch(Search $search);
+	public function saveEditedSearch(User $user, Search $search, array $searchData);
 }

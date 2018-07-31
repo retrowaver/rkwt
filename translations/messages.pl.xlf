@@ -91,18 +91,35 @@
                 <source>label.log-in</source>
                 <target>Zaloguj</target>
             </trans-unit>
+            <trans-unit id="label.save">
+                <source>label.save</source>
+                <target>Zapisz</target>
+            </trans-unit>
+            <trans-unit id="label.click-here">
+                <source>label.click-here</source>
+                <target>Kliknij tutaj</target>
+            </trans-unit>
 
 
             <trans-unit id="message.choose-filter-type">
                 <source>message.choose-filter-type</source>
                 <target>Wybierz rodzaj filtra</target>
             </trans-unit>
-
-
-
-            <trans-unit id="label.save">
-                <source>label.save</source>
-                <target>Zapisz</target>
+            <trans-unit id="message.no-searches">
+                <source>message.no-searches</source>
+                <target>Nie posiadasz jeszcze zdefiniowanych żadnych wyszukiwań.</target>
+            </trans-unit>
+            <trans-unit id="message.new-search-added">
+                <source>message.new-search-added</source>
+                <target>Wyszukiwanie dodane! Gdy tylko ktoś wystawi na Allegro przedmiot pasujący do podanych kryteriów, od razu otrzymasz powiadomienie.</target>
+            </trans-unit>
+            <trans-unit id="message.edited-search-saved">
+                <source>message.edited-search-saved</source>
+                <target>Zapisano zmiany!</target>
+            </trans-unit>
+            <trans-unit id="message.no-searches-need-to-add-one">
+                <source>message.no-searches-need-to-add-one</source>
+                <target>Zanim znalezione przedmioty zaczną się tutaj pojawiać, musisz zdefiniować co najmniej jedno wyszukiwanie.</target>
             </trans-unit>
 
 

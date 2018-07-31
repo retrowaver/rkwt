@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Search;
+use App\Entity\User;
 use App\Service\Allegro\AllegroService;
 use App\Service\Allegro\AllegroServiceInterface;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
@@ -10,8 +11,11 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
-use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\ORM\EntityManagerInterface;
 
 class SearchService implements SearchServiceInterface
 {
@@ -25,14 +29,84 @@ class SearchService implements SearchServiceInterface
     const ERROR_TOO_MANY_ITEMS = 'error-search-too-many-items';
     const ERROR_SEARCH_NAME_TOO_LONG = 'error-search-search-name-too-long';
 
-	private $allegro;
+    private $em;
+    private $allegro;
+    private $translator;
+    private $session;
 
-	public function __construct(AllegroServiceInterface $allegro)
-	{
+	public function __construct(
+        EntityManagerInterface $em,
+        AllegroServiceInterface $allegro,
+        TranslatorInterface $translator,
+        SessionInterface $session
+    ) {
+        $this->em = $em;
 		$this->allegro = $allegro;
+        $this->translator = $translator;
+        $this->session = $session;
 	}
 
-	public function denormalizeSearch(?array $searchData): Search
+    public function saveNewSearch(User $user, array $searchData)
+    {
+        // Denormalize and sanitize search data
+        $search = $this->denormalizeSearch($searchData);
+        $this->sanitizeSearch($search);
+
+        // Validate search and return array with error message if validation fails
+        $errorMessage = $this->validateSearch($search);
+        if (is_array($errorMessage)) {
+            return $errorMessage;
+        }
+        
+        // Everything's OK, so let's persist the search object
+        $search->setUser($user);
+        $search->setStatus(0);
+
+        $this->em->persist($search);
+        $this->em->flush();
+
+        // Add flash message
+        $this->session->getFlashBag()->add(
+            'notice',
+            $this->translator->trans('message.new-search-added')
+        );
+
+        return true;
+    }
+
+    public function saveEditedSearch(User $user, Search $search, array $searchData)
+    {
+        // Denormalize and sanitize search data, creating a temporary entity
+        $editedSearch = $this->denormalizeSearch($searchData);
+        $this->sanitizeSearch($editedSearch);
+
+        // Pass data from temporary entity to entity from db
+        $search->setName($editedSearch->getName());
+        $search->setFilters($editedSearch->getFilters());
+
+        // Validate search and return array with error message if validation fails
+        $errorMessage = $this->validateSearch($search);
+        if (is_array($errorMessage)) {
+            return $errorMessage;
+        }
+
+        // Everything's OK, so let's persist the search object
+        $search->setStatus(0);
+        $search->setTimeLastSearched(null);
+        $search->setTimeLastFullySearched(null);
+
+        $this->em->flush();
+
+        // Add flash message
+        $this->session->getFlashBag()->add(
+            'notice',
+            $this->translator->trans('message.edited-search-saved')
+        );
+
+        return true;
+    }
+
+    private function denormalizeSearch(?array $searchData): Search
     {
         $searchData = $this->preDenormalizeSearch($searchData);
 
@@ -43,15 +117,20 @@ class SearchService implements SearchServiceInterface
         return $serializer->denormalize($searchData, Search::class, null, ['groups' => ['search_save']]);
     }
 
-    public function sanitizeSearch(Search $search): Search
+    private function sanitizeSearch(Search $search): Search
     {
         $search->setName(trim($search->getName()));
 
         return $search;
     }
 
-    public function validateSearch(Search $search)
+    private function validateSearch(Search $search)
     {
+        // Check the length of search name
+        if (strlen($search->getName()) < 0 || strlen($search->getName()) > 40) {
+            return [self::ERROR_DEFAULT];
+        }
+
         // Check if search has at least one filter
         if ($search->getFiltersCount() === 0) {
             return [self::ERROR_NO_FILTERS];
@@ -61,9 +140,9 @@ class SearchService implements SearchServiceInterface
         //
         // If API error code is known (i.e. ERR_INCORRECT_FILTER_VALUE), then
         // pass it directly to user. If it's not, then display a default error.
-    	try {
+        try {
             $filtersInfo = $this->allegro->getFiltersInfo($search->getFiltersForApi());
-    	} catch (\SoapFault $e) {
+        } catch (\SoapFault $e) {
             switch ($e->faultcode) {
                 case 'ERR_INCORRECT_FILTER_VALUE':
                     return $e->getMessage();
@@ -71,7 +150,7 @@ class SearchService implements SearchServiceInterface
                 default:
                      return [self::ERROR_DEFAULT];
             }
-    	}
+        }
 
         // Check if any filters were rejected by Allegro API
         // (this should only happen due to user modifying the request)
@@ -81,13 +160,13 @@ class SearchService implements SearchServiceInterface
         }
 
         // Check the amount of items found
-    	if ($filtersInfo['itemsCount'] > self::NEW_SEARCH_MAX_ITEMS_COUNT) {
-    		return [
-    			self::ERROR_TOO_MANY_ITEMS,
-    			$filtersInfo['itemsCount'],
-    			self::NEW_SEARCH_MAX_ITEMS_COUNT
-    		];
-    	}
+        if ($filtersInfo['itemsCount'] > self::NEW_SEARCH_MAX_ITEMS_COUNT) {
+            return [
+                self::ERROR_TOO_MANY_ITEMS,
+                $filtersInfo['itemsCount'],
+                self::NEW_SEARCH_MAX_ITEMS_COUNT
+            ];
+        }
 
         // Check whether any filters are duplicated
         // (this should only happen due to user modifying the request)
@@ -111,6 +190,7 @@ class SearchService implements SearchServiceInterface
             return [self::ERROR_SEARCH_NAME_TOO_LONG];
         }
 
+        // Check if filter values do not exceed max allowed length
         foreach ($search->getFilters() as $filter) {
             foreach ($filter->getRawValues() as $value) {
                 if (strlen($value) > self::FILTER_VALUE_MAX_LENGTH) {
@@ -119,7 +199,7 @@ class SearchService implements SearchServiceInterface
             }
         }
 
-    	return true;
+        return true;
     }
 
     private function hasSearchUnexpectedFilterIds(Search $search, array $availableFiltersFromAllegro): bool
@@ -153,12 +233,10 @@ class SearchService implements SearchServiceInterface
 
     private function preDenormalizeSearch(array $searchData): array
     {
-        //
         if (empty($searchData['filters'])) {
             return $searchData;
         }
 
-        //
         $newFilters = [];
         foreach ($searchData['filters'] as $filter) {
             $newFilter = ['filterId' => $filter['filterId']];

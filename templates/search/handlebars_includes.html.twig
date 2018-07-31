@@ -20,15 +20,13 @@
 		{{/unless}}
 	</optgroup>
 
+	{{#if categoryFilters}}
 	<optgroup label="{{#trans}}label-category-filters{{/trans}}">
 		{{#each categoryFilters}}
 		<option value="{{filterId}}">{{filterName}}</option>
 		{{/each}}
-
-		{{#unless categoryFilters}}
-		<option disabled>{{#trans}}message-missing-category-filter{{/trans}}</option>
-		{{/unless}}
 	</optgroup>
+	{{/if}}
 </script>
 
 <script id="filter-display-template" type="text/x-handlebars-template">
