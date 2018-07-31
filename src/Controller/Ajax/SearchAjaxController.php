@@ -2,20 +2,20 @@
 
 namespace App\Controller\Ajax;
 
+use App\Entity\Search;
+use App\Service\SearchServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Service\SearchServiceInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use App\Entity\Search;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
-use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Doctrine\Common\Annotations\AnnotationReader;
 
 class SearchAjaxController extends AbstractController
 {
@@ -59,23 +59,20 @@ class SearchAjaxController extends AbstractController
      */
     public function getSearch(Search $search): JsonResponse
     {
+        // Initialize serializer
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
         $encoders = [new JsonEncoder()];
-
-        $normalizer = new ObjectNormalizer($classMetadataFactory);
-        $normalizers = [$normalizer];
-
-
+        $normalizers = [new ObjectNormalizer($classMetadataFactory)];
         $serializer = new Serializer($normalizers, $encoders);
         
+        // Serialize search object
         $jsonContent = $serializer->serialize(
             $search,
             'json',
             ['groups' => ['search_edit']]
         );
 
-        //echo $jsonContent;
-        //exit;
+        // Send response
         return new JsonResponse($jsonContent, 200, [], true);
     }
 

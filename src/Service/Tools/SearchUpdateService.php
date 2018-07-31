@@ -6,9 +6,7 @@ use App\Entity\Item;
 use App\Entity\Search;
 use App\Service\Allegro\AllegroService;
 use App\Service\Allegro\AllegroServiceInterface;
-
 use App\Service\ItemServiceInterface;
-
 use App\Repository\SearchRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -74,24 +72,26 @@ class SearchUpdateService implements SearchUpdateServiceInterface
             $search->getFiltersForApi()
         );
 
-        // Set items' status to .........................................................................
+        // Prepare items and assign them to search
         $this->itemService->setStatus($items, 0);
-
-        //
         $this->itemService->setSearch($items, $search);
-
-        //
         $search->setItems($items);
 
-        // Change search's status to "default active" (1)
+        // Change search's status (no longer fresh search)
         $search->setStatus(1);
 
+        // Update timestamps
         $search->setTimeLastSearched(new \DateTime('now'));
         $search->setTimeLastFullySearched(new \DateTime('now'));
     }
 
     private function updateStandardSearch(Search $search): void
     {
+        // Quick search is much faster and usually sufficient, but full search
+        // should be done from time to time due to following reasons:
+        // - it removes old / irrelevant items from db
+        // - it kind of synchronises local state with Allegro, which is useful
+        // in some cases (i.e. temporary unavailability of local server or Allegro API)
         if (
             $search->getTimeLastSearched() > new \DateTime('1 hour ago')
             && $search->getTimeLastFullySearched() > new \DateTime('1 day ago')
@@ -119,12 +119,13 @@ class SearchUpdateService implements SearchUpdateServiceInterface
         $this->itemService->setStatus($newItems, 2);
         $this->itemService->setSearch($newItems, $search);
 
+        // Add new items to search
         $items = new ArrayCollection(
             $newItems
         );
-
         $search->addItems($items);
 
+        // Update timestamp
         $search->setTimeLastSearched(new \DateTime('now'));
     }
 
@@ -161,14 +162,7 @@ class SearchUpdateService implements SearchUpdateServiceInterface
         // or older than X days (they can't and don't have to be stored forever)
         $inactiveItems = array_filter($inactiveItems, [$this, 'shouldItemBeKept']);
 
-
-        //dump($newItems);
-        //dump($activeItems);
-        //dump($inactiveItems);
-        //exit;
-
-
-        // Merge all items
+        // Merge all items into one collection
         $items = new ArrayCollection(
             array_merge(
                 $newItems,
@@ -177,26 +171,12 @@ class SearchUpdateService implements SearchUpdateServiceInterface
             )
         );
 
-        /*foreach ($items as $item) {
-            $item->setId(null);
-        }*/
-
-        //dump($items);
-        //exit;
-
-        //echo $items->count();
-
-
+        // Set items of search
         $search->setItems($items);
 
-
-        //echo $search->getItems()->count();
-        //exit;
-
+        // Update timestamps
         $search->setTimeLastSearched(new \DateTime('now'));
         $search->setTimeLastFullySearched(new \DateTime('now'));
-
-        //dodac do current searcha itemy, ktorych nie ma w nim (ze statusem 2) ?????????? co autor mial na mysli?        
     }
 
     private function shouldItemBeKept(Item $item): bool

@@ -2,11 +2,11 @@
 
 namespace App\Controller;
 
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Service\Allegro\AllegroServiceInterface;
-use Symfony\Component\HttpFoundation\Response;
 use App\Entity\Search;
+use App\Service\Allegro\AllegroServiceInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
@@ -27,7 +27,7 @@ class SearchController extends AbstractController
     public function editSearch(Search $search)
     {
         return $this->render('search/search_edit.html.twig', [
-            'searchId' => $search->getId(), // data will be retrieved later using ajax
+            'searchId' => $search->getId(), // Data will be retrieved later using ajax
             'searchName' => $search->getName()
         ]);
     }

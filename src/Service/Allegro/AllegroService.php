@@ -7,29 +7,35 @@ use Doctrine\Common\Collections\Collection;
 use App\Entity\Item;
 use App\Entity\Category;
 
-//use App\Entity\Item;
-
 class AllegroService implements AllegroServiceInterface
 {
 	const API_URL = 'https://webapi.allegro.pl/service.php?wsdl';
 	const COUNTRY_CODE = 1; // 1 for Poland
 	const GET_ITEMS_BATCH_SIZE = 1000; // 1-1000
-
 	const BASIC_FILTERS = ['search', 'category', 'userId'];
 	const COUNTRY_FILTERS = ['price', 'condition', 'offerType', 'shippingTime', 'offerOptions'];
-
 	const BANNED_FILTERS = [
-		'11323' // strange behavior, something's messed up on Allegro part I guess
+		// It's kind of a normal country filter `condition`, but extended
+		// to contain additional options for some categories (like `new
+		// with tags` for clothing categories). The thing is, it exhibits
+		// strange behavior (something's messed up on Allegro part I guess),
+		// and I don't know how to handle it reliably / even if so, I don't
+		// feel like creating many special cases for it.
+		'11323'
 	];
 
+	/** @var string $apiKey Stores last result from API call */
 	private $apiKey;
+
+	/** @var \SoapClient $soap Stores soap client */
 	private $soap;
-	private $result; // stores last result from API call
+
+	/** @var object $result Stores last result from API call */
+	private $result;
 
 	public function __construct(string $apiKey)
 	{
 		$this->apiKey = $apiKey;
-
 		$this->soap = $this->getSoapClient();
 	}
 
@@ -51,7 +57,7 @@ class AllegroService implements AllegroServiceInterface
 			];
 		}
 
-		//
+		// Main loop (max batch size is limited to 1000 items)
 		$offset = 0;
 		$itemsList = [];
 		do {
@@ -150,17 +156,13 @@ class AllegroService implements AllegroServiceInterface
 		return $filters;
 	}
 
-
-
-
-
 	public function getItemCount(array $filters): int
 	{
 		// Make request to API
 		$request = [
 			'webapiKey' => $this->apiKey,
 			'countryId' => self::COUNTRY_CODE,
-			'resultScope' => 7, // don't return items and categories, just filters
+			'resultScope' => 7, // don't return items, categories and filters - just item acount
 			'filterOptions' => $filters,
 		];
 
@@ -169,13 +171,10 @@ class AllegroService implements AllegroServiceInterface
 		return (int)$this->result->itemsCount;
 	}
 
-
 	public function getBannedFilterIds(): array
 	{
 		return self::BANNED_FILTERS;
 	}
-
-
 
 	private function filterFilters(array $filters): array
 	{

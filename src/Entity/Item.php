@@ -70,12 +70,6 @@ class Item
         $this->setTimeFound($timeFound ?? new \DateTime("now"));
     }
 
-    //////////////teststeststest
-    public function setId(?int $id)
-    {
-        $this->id = $id;
-    }
-
     public function getId()
     {
         return $this->id;

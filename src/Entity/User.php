@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OrderBy;
 use Symfony\Component\Security\Core\User\UserInterface;
-
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -66,8 +65,6 @@ class User implements UserInterface, \Serializable
     {
         $this->isActive = true;
         $this->searches = new ArrayCollection();
-        // may not be needed, see section on salt below
-        // $this->salt = md5(uniqid('', true));
     }
 
     public function getId(): int
@@ -179,10 +176,6 @@ class User implements UserInterface, \Serializable
 
         return $this;
     }
-
-
-
-
 
     public function getPlainPassword()
     {

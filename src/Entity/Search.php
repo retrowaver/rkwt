@@ -69,13 +69,6 @@ class Search
         return $this->id;
     }
 
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
     public function getUser(): ?User
     {
         return $this->user;
@@ -262,17 +255,4 @@ class Search
 
         return $this;
     }
-
-    /*public function removeItem(Item $item): self
-    {
-        if ($this->items->contains($item)) {
-            $this->items->removeElement($item);
-            // set the owning side to null (unless already changed)
-            if ($item->getSearch() === $this) {
-                $item->setSearch(null);
-            }
-        }
-
-        return $this;
-    }*/
 }

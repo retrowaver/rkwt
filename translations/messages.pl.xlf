@@ -121,6 +121,14 @@
                 <source>message.no-searches-need-to-add-one</source>
                 <target>Zanim znalezione przedmioty zaczną się tutaj pojawiać, musisz zdefiniować co najmniej jedno wyszukiwanie.</target>
             </trans-unit>
+            <trans-unit id="message.wrong-credentials">
+                <source>message.wrong-credentials</source>
+                <target>Nieprawidłowe dane.</target>
+            </trans-unit>
+            <trans-unit id="message.changes-saved">
+                <source>message.changes-saved</source>
+                <target>Zapisano zmiany!</target>
+            </trans-unit>
 
 
 

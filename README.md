@@ -33,6 +33,7 @@ Add `bin/console app:update-searches` to crontab.
 
 ## To do
 
+* better preview of values of added filters
 * when adding filters with type `int` or `float`, input should be of type `number` (but it's not that simple due to comma / period handling, I should create an issue with this I guess)
 * automatic categories update (whenever needed)
 * some way of dealing with searches that were valid in the past, but are not valid anymore (due to category or filter changes on Allegro itself)

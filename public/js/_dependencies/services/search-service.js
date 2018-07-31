@@ -18,8 +18,6 @@ class SearchService
 			filters: this._filterCollection.getFiltersForApi()
 		};
 
-		console.log(search);
-
 		// If no search ID specified then save data as a new search. Otherwise alter an existing one.
 		var targetUri = (searchId === null) ? '/ajax/search/save' : '/ajax/search/edit/' + searchId;
 

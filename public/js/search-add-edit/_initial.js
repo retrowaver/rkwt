@@ -7,10 +7,10 @@ var initial = function() {
 
 	var searchId = $("input[name='searchId']").val();
 	if (typeof(searchId) === 'undefined') {
-		/////// if new:
+		// New search
 		filterService.updateFilters();
 	} else {
-		/////// if edit:
+		// Editing existing search
 		searchService.loadSearch(searchId);
 	}
 }

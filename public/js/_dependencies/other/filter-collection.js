@@ -49,11 +49,7 @@ class FilterCollection
 			}
 		}
 
-		//console.log(current);
-
 		this._values[filterId] = current;
-
-		//console.log(this._values);
 	}
 
 	setMeta(filters)
@@ -114,13 +110,6 @@ class FilterCollection
 	{
 		return Object.keys(this._meta);
 	}
-
-	/*
-	// currently unused
-	getValues(filterId)
-	{
-		return this._values[filterId];
-	}*/
 
 	getValuesForDisplay(filterId)
 	{

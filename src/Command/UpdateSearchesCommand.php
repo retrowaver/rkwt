@@ -27,7 +27,7 @@ class UpdateSearchesCommand extends Command
     {
         $this
 	        ->setName('app:update-searches')
-	        ->setDescription('Updates searches.')
+	        ->setDescription('Updates searches and sends notifications of new items.')
 	        //->setHelp('...')
 	    ;
     }

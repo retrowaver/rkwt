@@ -7,18 +7,11 @@ use App\Entity\Search;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Bridge\Doctrine\RegistryInterface;
-
 use Doctrine\ORM\Query;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 
-/**
- * @method Item|null find($id, $lockMode = null, $lockVersion = null)
- * @method Item|null findOneBy(array $criteria, array $orderBy = null)
- * @method Item[]    findAll()
- * @method Item[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
 class ItemRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
@@ -28,8 +21,8 @@ class ItemRepository extends ServiceEntityRepository
     
     public function findLatest(int $userId, array $statuses = [], int $page = 1): Pagerfanta
     {
+        // Get items that belong to searches of specified user
         $queryBuilder = $this ->createQueryBuilder('i');
-
         $queryBuilder
             ->where(
                 $queryBuilder->expr()->in(
@@ -51,18 +44,7 @@ class ItemRepository extends ServiceEntityRepository
         }
 
         $query = $queryBuilder->getQuery();
-        //dump($query);
-        //exit;
-
-        //dump($this->createPaginator($query, $page));
-        //exit;
-
         return $this->createPaginator($query, $page);
-
-        /*return new ArrayCollection(
-            $queryBuilder->getQuery()
-                ->getResult()
-        );*/
     }
 
     public function findByStatus(int $status): Collection
@@ -84,17 +66,4 @@ class ItemRepository extends ServiceEntityRepository
 
         return $paginator;
     }
-    
-
-    /*
-    public function findOneBySomeField($value): ?Item
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

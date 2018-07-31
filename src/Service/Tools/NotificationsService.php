@@ -32,7 +32,7 @@ class NotificationsService implements NotificationsServiceInterface
 			$sender->sendNotifications($items);
 		}
 
-		// Set items' status ....................................
+		// Set items' status
 		foreach ($items as $item) {
 			$item->setStatus(1);
 		}

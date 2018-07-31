@@ -5,6 +5,7 @@
 
 	"message-chosen-category": "Wybrana kategoria: $1",
 	"message-missing-basic-filter": "Najpierw dodaj filtr podstawowy",
+	"message-delete-search-confirm": "Na pewno usunąć to wyszukiwanie? Wszystkie znalezione za jego pomocą przedmioty zostaną usunięte z Twojego panelu użytkownika.",
 
 	"label-error": "Błąd",
 	"label-min-value": "Od",
@@ -18,6 +19,8 @@
 	"label-delete": "Usuń",
 	"label-select-choose": "-- Wybierz --",
 	"label-go-back": "wstecz",
+	"label-search-deletion": "Usuwanie wyszukiwania",
+	"label-cancel": "Anuluj",
 
 	"default-search-name": "bez nazwy",
 

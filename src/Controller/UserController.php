@@ -2,18 +2,19 @@
 
 namespace App\Controller;
 
+use App\Form\UserSettingsType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Form\UserSettingsType;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class UserController extends AbstractController
 {
     /**
      * @Route({"pl": "/konto/ustawienia"}, name="user_settings")
      */
-    public function settings(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function settings(Request $request, UserPasswordEncoderInterface $passwordEncoder, TranslatorInterface $translator)
     {
     	$user = $this->getUser();
     	$form = $this->createForm(UserSettingsType::class, $user);
@@ -31,7 +32,7 @@ class UserController extends AbstractController
 
             $this->addFlash(
 	            'notice',
-	            'Zapisano zmiany!'
+	            $translator->trans('message.changes-saved')
        	 	);
         }
 

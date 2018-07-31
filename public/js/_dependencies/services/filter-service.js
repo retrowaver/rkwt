@@ -12,7 +12,7 @@ class FilterService
 		this._FILTER_VALUE_MAX_LENGTH = 50;
 	}
 
-	// Updates filters: 
+	// Updates filters
 	updateFilters(edit = false)
 	{
 		this._preloader.show();
@@ -54,7 +54,6 @@ class FilterService
 			// search, they have to be displayed / generated all at once in the beginning
 			if (edit) {
 				this._displayService.displayFilters();
-				//this._displayService.updateDescriptions();
 			}
 		}, this)).done($.proxy(function(){
 			this._preloader.hide();

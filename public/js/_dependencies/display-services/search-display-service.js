@@ -51,8 +51,6 @@ class SearchDisplayService
 		});
 
 		$("#filters-container").html(select);
-		//console.log(this._filterCollection.meta);
-
 
 		// disabling already used filters - should be rewritten somehow
 		var currentFiltersIds = this._filterCollection.getFiltersIds();
@@ -94,7 +92,6 @@ class SearchDisplayService
 	displayError(errorMessage)
 	{
 	    $.alert({
-	        //title: 'Błąd',
 	        title: $.i18n('label-error'),
 	        content: errorMessage,
 	    });
@@ -179,7 +176,6 @@ class SearchDisplayService
 
 	_getDescriptionForCheckbox(values, meta)
 	{
-		//console.log(values);
 		//return ['Zaznaczono filtrów: ' + values.filterValueId.length];
 		return ['...'];
 	}
@@ -191,17 +187,14 @@ class SearchDisplayService
 
 	_getDescriptionForTextbox(values, meta)
 	{
-		//console.log(values);
 		var content = [];
 		if (meta.filterIsRange) {
 			if (values.filterValueRange.rangeValueMin) {
-				//content.push('od ' + values.filterValueRange.rangeValueMin);
 				content.push(
 					$.i18n('label-min-value-x', values.filterValueRange.rangeValueMin)
 				);
 			}
 			if (values.filterValueRange.rangeValueMax) {
-				//content.push('do ' + values.filterValueRange.rangeValueMax);
 				content.push(
 					$.i18n('label-max-value-x', values.filterValueRange.rangeValueMax)
 				);
@@ -215,7 +208,7 @@ class SearchDisplayService
 
 	_getModalBody(meta)
 	{
-		// Special forms.
+		// Special forms
 		switch (meta.filterId) {
 			case 'category':
 				return this._templates.newSearchCategory(meta);
@@ -225,7 +218,7 @@ class SearchDisplayService
 				break;
 		}
 
-		// Standard forms.
+		// Standard forms
 		switch (meta.filterControlType) {
 			case 'combobox':
 				return this._templates.newSearchCombobox(meta);
@@ -241,7 +234,7 @@ class SearchDisplayService
 
 	_alterModalWithExistingValues(meta, values)
 	{
-		// Special forms.
+		// Special forms
 		switch (meta.filterId) {
 			case 'category':
 				this._alterCategoryModalWithExistingValues(meta, values);
@@ -253,7 +246,7 @@ class SearchDisplayService
 				break;
 		}
 
-		// Standard forms.
+		// Standard forms
 		switch (meta.filterControlType) {
 			case 'checkbox':
 				this._alterCheckboxModalWithExistingValues(meta, values);
@@ -274,7 +267,7 @@ class SearchDisplayService
 		var userId = values.filterValueId[0];
 		$("input[name='new-filter-value[]']").val(userId);
 
-		// Username isn't stored in db, therefore has to be requested.
+		// Username isn't stored in db, therefore has to be requested
 		$.getJSON('/ajax/allegro/username', {userId: userId, csrfToken: this._dataContainer.csrfToken}, $.proxy(function(data) {
 			$("#user-id-picker-username").val(data.username);
 		}, this)).done($.proxy(function(){

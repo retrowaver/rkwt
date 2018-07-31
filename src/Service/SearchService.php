@@ -23,7 +23,7 @@ class SearchService implements SearchServiceInterface
     const SEARCH_NAME_MAX_LENGTH = 40;
     const FILTER_VALUE_MAX_LENGTH = 50;
 
-    // localized in js
+    // Localized in js
     const ERROR_DEFAULT = 'error-search-default';
     const ERROR_NO_FILTERS = 'error-search-no-filters';
     const ERROR_TOO_MANY_ITEMS = 'error-search-too-many-items';
