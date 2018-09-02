@@ -48,7 +48,12 @@ class AnonymousRedirectSubscriber implements EventSubscriberInterface
 
     private function isUserLogged()
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $token = $this->tokenStorage->getToken();
+        if (!$token) {
+            return false;
+        }
+
+        $user = $token->getUser();
         return $user instanceof User;
     }
 
