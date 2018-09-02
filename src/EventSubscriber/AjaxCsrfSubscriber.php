@@ -8,15 +8,15 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
-class AjaxCsrfListener implements EventSubscriberInterface
+class AjaxCsrfSubscriber implements EventSubscriberInterface
 {
     private $tokenManager;
 
     public static function getSubscribedEvents()
     {
-        return array(
-            'kernel.request' => array('onKernelRequest', 1000)
-        );
+        return [
+            'kernel.request' => ['onKernelRequest', 1000]
+        ];
     }
 
 

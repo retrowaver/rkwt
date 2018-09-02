@@ -152,6 +152,10 @@
                 <source>page-title.search.list</source>
                 <target>Twoje wyszukiwania</target>
             </trans-unit>
+            <trans-unit id="page-title.security.register">
+                <source>page-title.security.register</source>
+                <target>Rejestracja</target>
+            </trans-unit>
             <trans-unit id="page-title.security.login">
                 <source>page-title.security.login</source>
                 <target>Logowanie</target>
@@ -184,6 +188,10 @@
             <trans-unit id="page-navbar-title.logout">
                 <source>page-navbar-title.logout</source>
                 <target>Wyloguj</target>
+            </trans-unit>
+            <trans-unit id="page-navbar-title.register">
+                <source>page-navbar-title.register</source>
+                <target>Rejestracja</target>
             </trans-unit>
             <trans-unit id="page-navbar-title.login">
                 <source>page-navbar-title.login</source>

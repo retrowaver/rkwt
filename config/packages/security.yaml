@@ -49,5 +49,9 @@ security:
          - { path: ^/wyszukiwania, roles: ROLE_USER }
          - { path: ^/przedmioty, roles: ROLE_USER }
          - { path: ^/konto, roles: ROLE_USER }
+
+        # - { path: ^/logowanie, allow_if: "not has_role('ROLE_USER')" }
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+
+        

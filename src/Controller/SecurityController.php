@@ -29,4 +29,12 @@ class SecurityController extends AbstractController
 		    'form' => $form->createView()
 		]);
     }
+
+    /**
+     * @Route({"pl": "/rejestracja"}, name="register")
+     */
+    public function register()
+    {
+		return $this->render('security/register.html.twig');
+    }
 }

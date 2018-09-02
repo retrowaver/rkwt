@@ -54,6 +54,9 @@
                         <a href="{{ path("homepage") }}" class="nav-link{% if app.request.attributes.get('_route') starts with 'homepage' %} active{% endif %}"><i class="fas fa-home"></i> {% trans %}page-navbar-title.homepage{% endtrans %}</a>
                     </li>
                     <li class="nav-item">
+                        <a href="{{ path("register") }}" class="nav-link{% if app.request.attributes.get('_route') starts with 'register' %} active{% endif %}"><i class="fas fa-user-plus"></i> {% trans %}page-navbar-title.register{% endtrans %}</a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{{ path("login") }}" class="nav-link{% if app.request.attributes.get('_route') starts with 'login' %} active{% endif %}"><i class="fas fa-sign-in-alt"></i> {% trans %}page-navbar-title.login{% endtrans %}</a>
                     </li>
                 {% endif %}
