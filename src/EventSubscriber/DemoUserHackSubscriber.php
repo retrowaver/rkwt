@@ -17,6 +17,7 @@ class DemoUserHackSubscriber implements EventSubscriberInterface
     const ALLOWED_ROUTES = [
         'homepage',
         'item_list',
+        'item_list_paginated',
         'search_new',
         'search_edit',
         'search_list',
